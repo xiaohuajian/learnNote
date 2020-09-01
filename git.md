@@ -106,9 +106,113 @@ merge 合并其实是结果合并，Git 会使用两个分支的末端所指的�
 
 
 
+## 远程仓库 git remote
+
+**管理远程仓库包括了解如何添加远程仓库、移除无效的远程仓库、管理不同的远程分支并定义它们是否被跟踪**等等。然后所有和远程仓库相关的操作可以通过 git remote. **远程仓库默认名字 “origin” 与分支名字 “master” 一样**，在 Git 中并没有任何特别的含义一样。 同时 “master” 是当你运行 `git init` 时默认的起始分支名字，原因仅仅是它的广泛使用，“origin” 是当你运行 `git clone` 时默认的远程仓库名字。 如果你运行 `git clone -o booyah`，那么你默认的远程分支名字将会是 `booyah/master`。
+
+### 查看远程仓库
+
+如果想查看你已经配置的远程仓库url，可以运行 `git remote` 命令。 它会列出你指定的每一个远程仓库名字简写。 如果你已经克隆了自己的仓库，那么至少应该能看到 origin ——这是 Git 给你克隆的仓库的默认名字：
+
+```
+$ git remote
+origin
+```
+
+![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
+
+你也可以指定选项 `-v`，会显示需要读写远程仓库使用的 Git 保存的简写与其对应的 URL。
+
+```
+$ git remote -v
+origin	https://github.com/schacon/ticgit (fetch)
+origin	https://github.com/schacon/ticgit (push)
+```
+
+那么，仓库简写名称为origin，对应的url为 https：//github.com/.... 如果想要查看更多的仓库远程信息 ,可以用 
+
+```
+$ git remote show  [shortname]
+ 
+git remote show origin
+```
+
+
+
+```
+$ git remote show origin
+* remote origin
+  Fetch URL: git@github.com:huburt-Hu/NewbieGuide.git
+  Push  URL: git@github.com:huburt-Hu/NewbieGuide.git
+  HEAD branch: master
+  Remote branches:
+    dev    tracked
+    master tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (up to date)![点击并拖拽以移动]
+```
+
+ 这个命令列出了当你在特定的分支上执行 `git push` 会自动地推送到哪一个远程分支。 它也同样地列出了哪些远程分支不在你的本地，哪些远程分支已经从服务器上移除了，还有当你执行 `git pull` 时哪些分支会自动合并。
+
+
+
+### 添加远程仓库
+
+我在之前的章节中已经提到并展示了如何添加远程仓库的示例，不过这里将告诉你如何明确地做到这一点。 运行 `git remote add <shortname> <url>` 添加一个新的远程 Git 仓库，同时指定一个你可以轻松引用的简写：
+
+```
+sjh@DESKTOP-QFQQSSM MINGW64 /d/androidProject/temp
+$ git init
+Initialized empty Git repository in D:/androidProject/temp/.git/
+
+sjh@DESKTOP-QFQQSSM MINGW64 /d/androidProject/temp (master)
+$ git remote add remoteUrl git@github.com:huburt-Hu/NewbieGuide.git
+
+sjh@DESKTOP-QFQQSSM MINGW64 /d/androidProject/temp (master)
+$ git remote
+remoteUrl
+```
+
+![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
+
+这里，我们可以把一个本地存在的仓库，通过git remote add 命令来和远程库进行关联，这里我用了 shortName 为 remoteUrl ,然后再运行 git remote 就得到了remoteUrl ；
+
+### 从远程仓库中抓取与拉取
+
+```
+$ git fetch [remote-name]
+```
+
+这个命令会访问远程仓库，从中拉取所有你还没有的数据。（这里的remote-name 等于上面的shortname）
+
+如果你使用 `clone` 命令克隆了一个仓库，命令会自动将其添加为远程仓库并默认以 “origin” 为简写。 所以，`git fetch origin` 会抓取克隆（或上一次抓取）后新推送的所有工作。 必须注意 `git fetch` 命令会将数据拉取到你的本地仓库——它并不会自动合并或修改你当前的工作。 当准备好时你必须手动将其合并入你的工作。
+
+如果你有一个分支设置为跟踪一个远程分支，可以使用 `git pull` 命令来自动的抓取然后合并远程分支到当前分支。 这对你来说可能是一个更简单或更舒服的工作流程；默认情况下，`git clone` 命令会自动设置本地 master 分支跟踪克隆的远程仓库的 master 分支（或不管是什么名字的默认分支）。 运行 `git pull` 通常会从最初克隆的服务器上抓取数据并自动尝试合并到当前所在的分支。
+
+从这里看 fetch 和 pull 有一些差别，一般的，我们会用pull 进行抓取并合并，相当于是 pull = fetch + merge，同时fetch 好像并不常用。
+
+### 仓库重命名
+
+如果想要重命名引用的名字可以运行 `git remote rename` 去修改一个远程仓库的简写名。 例如，想要将 `pb` 重命名为 `paul`，可以用 `git remote rename` 这样做：
+
+```
+$ git remote rename pb paul
+$ git remote
+origin
+paul
+```
+
+值得注意的是这同样也会修改你的远程分支名字。 那些过去引用 `pb/master` 的现在会引用 `paul/master`。
+
  ### 远程分支
 
 **远程引用是对远程仓库的引用（指针），包括分支、标签等等。** 你可以通过 `git ls-remote`远程跟踪分支是远程分支状态的引用。**它们是你无法移动的本地引用。**一旦你进行了网络通信， Git 就会为你移动它们以精确反映远程仓库的状态。请将它们看做书签， 这样可以提醒你该分支在远程仓库中的位置就是你最后一次连接到它们的位置。
+
+假如远程仓库和本地仓库都创建好了，但没有进行关联，这时候需要先进行关联才能推送，否则我怎么知道应该往哪里推呢？
+
+git remote add origin  git@github.com:xiaohuajian/test.git 
 
 #### 推送push
 
