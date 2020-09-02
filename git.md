@@ -206,7 +206,7 @@ paul
 
 值得注意的是这同样也会修改你的远程分支名字。 那些过去引用 `pb/master` 的现在会引用 `paul/master`。
 
- ### 远程分支
+ ## 远程分支
 
 **远程引用是对远程仓库的引用（指针），包括分支、标签等等。** 你可以通过 `git ls-remote`远程跟踪分支是远程分支状态的引用。**它们是你无法移动的本地引用。**一旦你进行了网络通信， Git 就会为你移动它们以精确反映远程仓库的状态。请将它们看做书签， 这样可以提醒你该分支在远程仓库中的位置就是你最后一次连接到它们的位置。
 
@@ -503,7 +503,88 @@ git log --pretty="%h - %s" --author='Junio C Hamano' --since="2008-10-01" \
 
 
 
+## 代码上传与下载
 
+### 从github拉取代码
+
+1.找到项目地方，点击clone or download，然后点击open in desk即可，然后打开github.exe 软件就会自动下载了
+如果用git的话，可以参考 https://jingyan.baidu.com/article/dca1fa6f0cc9bcf1a540524d.html 就可以了。
+a 先拿到工程的url；
+b 在再本地电脑D：//projetc/github/  (存放工程目录)右键，选择 Git Bash here ，然后会出来一个git的shell窗口，
+输入 git clone url （工程url），这样就ok了，等待下载完成；
+
+
+
+### 把本地代码上传到GitHub上去？
+
+#### 1.远程仓库已经存在
+
+a 先打开git shell操作界面；
+b 先初始化目录git init ， 再执行git add file（要上传的文件名） 或者 git add --all 
+c 提交 git commit -m "提交时的注语" （这里一定要加注释，否则会失败）
+d 执行 git push -u origin master 后，会要求你输入自己的github的账号密码。
+然后在网页上刷新界面，就可以看到新提交的文件了
+
+#### 2 假如是远程仓库还没创建
+
+a 按照 1中的执行a b c 步；
+b然后再github上创建仓库，记住勾选创建ReadMe.md 文件，然后拿到ssh的地址 （有个选项Clone with SSH）；
+c 本地的仓库关联到github上 git remote add origin  git@github.com:xiaohuajian/test.git 
+d 执行 git pull --rebase origin master ，执行完后，那个README.md 等服务器文件被下载下来了；
+（这一步一定要执行，否则会不成功，提示 failed to push some refs to，那是因为本地代码目录缺失README.md文件。我们只需要先通过如下命令进行代码合并【注：pull=fetch+merge] ）
+
+e 执行 git push -u origin master 上传代码
+
+后面还有配置ssh key什么的，这个东西后面遇到了再总结吧。
+
+### 下载Framework Source Code 
+
+framework 的代码地址为 https://github.com/aosp-mirror/platform_frameworks_base ，我们只需像clone其他代码一样，利用git把源码clone下来，但是要注意的是 之前下载其他代码url用的是https，但是由于此代码比较大，https 容易失败，我试验了几次都下载失败，推荐用ssh 地址来下载，下载git语句：git clone git@github.com:aosp-mirror/platform_frameworks_base.git --depth 1
+
+```
+$ git clone git@github.com:aosp-mirror/platform_frameworks_base.git --depth 1
+Cloning into 'platform_frameworks_base'...
+Warning: Permanently added the RSA host key for IP address '52.74.223.119' to the list of known hosts.
+remote: Enumerating objects: 37156, done.
+remote: Counting objects: 100% (37156/37156), done.
+remote: Compressing objects: 100% (23583/23583), done.
+Receiving objects: 100% (37156/37156), 621.81 MiB | 12.00 KiB/s, done.
+remote: Total 37156 (delta 12480), reused 24595 (delta 7968), pack-reused 0
+Resolving deltas: 100% (12480/12480), done.
+Checking out files: 100% (30412/30412), done.
+```
+
+下载源码参考文章有：https://blog.csdn.net/yushuangping/article/details/84240863、https://blog.csdn.net/qq_29586601/article/details/80399034
+
+官方的源码网站：
+
+https://android.googlesource.com/platform/frameworks/base/ 、https://source.android.com/setup/build/downloading
+
+在线阅读网站：http://androidxref.com 
+
+## 配置SSH Key
+
+前几天，终于搞明白了SSH key的作用和配置原理，现在来记录一下，其实也不需要明白原理，会操作也差不多。其实网上的教程很多，这里记录更多的给自己看而已。
+
+如何配置，一张图就完了，如下：
+
+![img](https://tva1.sinaimg.cn/large/007S8ZIlgy1gibb4igdc9j30n10cogmz.jpg)![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
+
+下载完git 然后安装，打开命令行，输入 ssh-keygen -t rsa -C ‘个人邮箱’ ；
+
+然后就按照提示做就行了，然后给出参考文章 ：http://www.testclass.net/git/registration-and-installation/
+
+另外，如果同一个电脑要配置多个ssh key 应该怎么办呢？（场景：就是在不同的git 代码托管网站 gitlab \ github，用不同的ssh key）
+
+参考文章：https://blog.csdn.net/chen529834149/article/details/77675999 ，自己没有成功，有谁会的，可以告知一下。
+
+注意点：
+
+\1. 在输入密码的时候可以为空，直接回车；
+
+\2. 最后生成的文件会放在（Windows在 用户名/admin/.ssh ）目录下，.ssh 属于隐藏目录，需要设置显示隐藏目录才能看到。
+
+\3. 最后把id_rsa.pub 文件打开，把里面的字符串放到git 网站上面；
 
 
 
