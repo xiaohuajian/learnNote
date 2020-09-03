@@ -6,13 +6,13 @@
 
 有时候，下载太慢gradle，我们可以直接拷贝源码到相应的目录。对于windows而言，其gradle的存放目录为：
 
-<img src="C:\Users\admin\Desktop\base64.png" alt="base64" style="zoom:67%;" />
+<img src="https://i.loli.net/2020/09/03/Ptbw8QBGHZIMuV4.png" alt="base64" style="zoom:67%;" />
 
-<img src="C:\Users\admin\Desktop\base65.png" alt="base65" style="zoom:67%;" />
+<img src="https://i.loli.net/2020/09/03/twYOdv7por6mCI4.png" alt="base65" style="zoom:67%;" />
 
 从这里要明白，下载的为**gradle-版本号-all.zip 压缩包**，然后自动会解压并生成lck 和 ok文件。那么，我们可以直接去  [官网](https://services.gradle.org/distributions/) 下载相应的
 
-![base66](C:\Users\admin\Desktop\base66.png)
+![base66](https://i.loli.net/2020/09/03/qYASdGa4g6Dh85p.png)
 
 图中 红色的标注。
 
