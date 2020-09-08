@@ -206,13 +206,19 @@ paul
 
 值得注意的是这同样也会修改你的远程分支名字。 那些过去引用 `pb/master` 的现在会引用 `paul/master`。
 
- ## 远程分支
+ ## 远程分支 
 
-**远程引用是对远程仓库的引用（指针），包括分支、标签等等。** 你可以通过 `git ls-remote`远程跟踪分支是远程分支状态的引用。**它们是你无法移动的本地引用。**一旦你进行了网络通信， Git 就会为你移动它们以精确反映远程仓库的状态。请将它们看做书签， 这样可以提醒你该分支在远程仓库中的位置就是你最后一次连接到它们的位置。
+**远程引用是对远程仓库的引用（指针），包括分支、标签等等。** 你可以通过 `git ls-remote `来显式地获得远程引用的完整列表， 或者通过 `git remote show <remote>` 获得远程分支的更多信息。 远程跟踪分支是远程分支状态的引用。**它们是你无法移动的本地引用。**一旦你进行了网络通信， Git 就会为你移动它们以精确反映远程仓库的状态。请将它们看做书签， 这样可以提醒你该分支在远程仓库中的位置就是你最后一次连接到它们的位置。
+
+远程分支以 `<remote>/<branch>` 的形式命名，如远程仓库origin 的master 分支，则表示为 origin/master ==（所以这里的remote 表示远程仓库的含义，后面在见到这个remote 就是远程仓库的意思。）==
 
 假如远程仓库和本地仓库都创建好了，但没有进行关联，这时候需要先进行关联才能推送，否则我怎么知道应该往哪里推呢？
 
 git remote add origin  git@github.com:xiaohuajian/test.git 
+
+> “origin” 并无特殊含义
+>
+> 远程仓库名字 “origin” 与分支名字 “master” 一样，在 Git 中并没有任何特别的含义一样。 同时 “master” 是当你运行 `git init` 时默认的起始分支名字，原因仅仅是它的广泛使用， “origin” 是当你运行 `git clone` 时默认的远程仓库名字。 如果你运行 `git clone -o booyah`，那么你默认的远程分支名字将会是 `booyah/master`。
 
 #### 推送push
 
@@ -225,12 +231,34 @@ git remote add origin  git@github.com:xiaohuajian/test.git
 当你想要公开分享一个分支时，需要将其推送到有写入权限的远程仓库上。命令为：
 
 ```
-git push (remote) (branch)
+git push (remote) (Localbranch)
 
 eg: git push origin v1  // 把分支v1 推送到origin仓库里
 ```
 
- 你也可以运行 `git push origin v1:v1Fix`，它会做同样的事——也就是说“推送本地的 `v1` 分支，将其作为远程仓库的 `v1Fix` 分支” 可以通过这种格式来推送本地分支到一个命名不相同的远程分支。
+ 你也可以运行 `git push origin v1:v1Fix`，它会做同样的事——也就是说“推送本地的 `v1` 分支，将其作为远程仓库的 `v1Fix` 分支” ==可以通过这种格式来推送本地分支到一个命名不相同的远程分支。==
+
+#### 拉取
+
+当 `git fetch` 命令从服务器上抓取本地没有的数据时，它并不会修改工作目录中的内容。 它只会获取数据然后让你自己合并。要明白一点就是 fetch 是把服务器数据同步到本地，但是没有合并；也可以理解为fetch针对到是仓库 remote 而言，把仓库里所有的和本地不同的数据同步下来，然后你自己根据需要自己去 合并这个仓库中的远程分支到本地分支， 运行`git merge remote/branchName` 意思是合并remote仓库里的branchName分支到当前分支。
+
+然而，有一个命令叫作 `git pull` 在大多数情况下它的含义是一个 `git fetch` 紧接着一个 `git merge` 命令。如果有一个像之前章节中演示的设置好的跟踪分支，不管它是显式地设置还是通过 `clone` 或 `checkout` 命令为你创建的，`git pull` 都会查找当前分支所跟踪的服务器与分支， 从服务器上抓取数据然后尝试合并入那个远程分支。
+
+**git pull = git fetch  + git merge 二者效果一样，原理不一样**; 
+
+由于 `git pull` 的魔法经常令人困惑所以通常单独显式地使用 `fetch` 与 `merge` 命令会更好一些; 
+
+merge 用法：`git merge branchName`
+
+Git  fetch origin ; git merge origin/master —— 抓取所有的远程分支，然后合并远程master分支代码到当前本地分支
+
+```
+git diff origin develop  拉取某个分支之前，想看看区别
+Git fetch origin develop  把远程develop分支先抓取 (这里只fetch 了某个分支，一般直接fetch整个仓库，不用接分支名)
+git merge origin/develop  把远程develop 进行本地分支合并
+```
+
+##### 
 
 #### 跟踪分支
 
@@ -245,8 +273,6 @@ eg: git push origin v1  // 把分支v1 推送到origin仓库里
 ```
 git checkout -b feature/message origin/feature/message 把远程分支检出一个本地分支并建立关联
 ```
-
-
 
 ##### 查看跟踪分支提交情况
 
@@ -276,22 +302,6 @@ $ git branch -vv
 重点注意的一点是这些数字的值来自于你从每个服务器上最后一次抓取的数据。 这个命令并没有连接服务器，它只会告诉你关于本地缓存的服务器数据。 如果想要统计最新的领先与落后数字，需要在运行此命令前抓取所有的远程仓库，可以执行:
 
 **`git fetch --all; git branch -vv`**
-
-#### 拉取
-
-当 `git fetch` 命令从服务器上抓取本地没有的数据时，它并不会修改工作目录中的内容。 它只会获取数据然后让你自己合并。 然而，有一个命令叫作 `git pull` 在大多数情况下它的含义是一个 `git fetch` 紧接着一个 `git merge` 命令。如果有一个像之前章节中演示的设置好的跟踪分支，不管它是显式地设置还是通过 `clone` 或 `checkout` 命令为你创建的，`git pull` 都会查找当前分支所跟踪的服务器与分支， 从服务器上抓取数据然后尝试合并入那个远程分支。
-
-**git pull = git fetch  + git merge 二者效果一样，原理不一样**; 
-
-由于 `git pull` 的魔法经常令人困惑所以通常单独显式地使用 `fetch` 与 `merge` 命令会更好一些; 
-
-Git  fetch origin ; git merge origin/master —— 抓取所有的远程分支，然后合并远程master分支代码到当前本地分支
-
-```
-git diff origin develop  拉取某个分支之前，想看看区别
-Git fetch origin develop  把远程develop分支先抓取
-git merge origin develop  把远程develop 进行本地分支合并
-```
 
 
 
