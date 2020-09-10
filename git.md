@@ -231,8 +231,9 @@ git remote add origin  git@github.com:xiaohuajian/test.git
 当你想要公开分享一个分支时，需要将其推送到有写入权限的远程仓库上。命令为：
 
 ```
-git push (remote) (Localbranch)
+git push [remote] [Localbranch]
 
+eg: git push    把当前分支推送到默认仓库
 eg: git push origin v1  // 把分支v1 推送到origin仓库里
 ```
 
@@ -242,7 +243,7 @@ eg: git push origin v1  // 把分支v1 推送到origin仓库里
 
 当 `git fetch` 命令从服务器上抓取本地没有的数据时，它并不会修改工作目录中的内容。 它只会获取数据然后让你自己合并。要明白一点就是 fetch 是把服务器数据同步到本地，但是没有合并；也可以理解为fetch针对到是仓库 remote 而言，把仓库里所有的和本地不同的数据同步下来，然后你自己根据需要自己去 合并这个仓库中的远程分支到本地分支， 运行`git merge remote/branchName` 意思是合并remote仓库里的branchName分支到当前分支。
 
-然而，有一个命令叫作 `git pull` 在大多数情况下它的含义是一个 `git fetch` 紧接着一个 `git merge` 命令。如果有一个像之前章节中演示的设置好的跟踪分支，不管它是显式地设置还是通过 `clone` 或 `checkout` 命令为你创建的，`git pull` 都会查找当前分支所跟踪的服务器与分支， 从服务器上抓取数据然后尝试合并入那个远程分支。
+然而，有一个命令叫作 `git pull` 在大多数情况下它的含义是一个 `git fetch` 紧接着一个 `git merge` 命令。如果有一个像之前章节中演示的设置好的跟踪分支，不管它是显式地设置还是通过 `clone` 或 `checkout` 命令为你创建的，`git pull` 从最初克隆的服务器上抓取数据并自动尝试合并到当前所在的分支。
 
 **git pull = git fetch  + git merge 二者效果一样，原理不一样**; 
 
