@@ -512,7 +512,50 @@ git log --pretty="%h - %s" --author='Junio C Hamano' --since="2008-10-01" \
 
 更多的日志过滤 参考 ：[连接]([https://www.git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E5%8E%86%E5%8F%B2#limit_options](https://www.git-scm.com/book/zh/v2/Git-基础-查看提交历史#limit_options))
 
+## 提交代码
 
+**add**
+
+在提交时，一般我们先要add文件，就是把文件加入暂存区，其命令为：`git add filePath` , 可以简单一点 直接把所有的文件都加到暂存区，`git add --all`. Add  有两种含义**：一是把文件加入版本控制，二是把修改后的文件加入暂存区**；
+
+**commit**
+
+```
+git commit -a -m 'msg'
+a : 对变化的文件都直接添加到暂存区 —— 可以用这个参数把所有改动的文件加入暂存区，省去了 git add --all 命令
+m ：提交时的注释信息 （这个不能省略）
+```
+
+**取消文件的版本控制**
+
+取消文件的版本控制，就是**删除该文件在远程仓库的映射，并把其加入本地的忽略文件**；
+
+1. 预览将要删除的文件
+
+```undefined
+git rm -r -n --cached 文件/文件夹名称 
+加上 -n 这个参数，执行命令时，是不会删除任何文件，而是展示此命令要删除的文件列表预览。
+```
+
+2. 确定无误后删除文件
+
+```undefined
+git rm -r --cached 文件/文件夹名称
+```
+
+3. 提交到本地并推送到远程服务器
+
+```bash
+git commit -m "提交说明"
+git push origin master
+```
+
+4. 修改本地 .gitignore 文件 并提交
+
+```bash
+  git commit -m "提交说明"
+  git push origin master
+```
 
 ## 代码上传与下载
 
