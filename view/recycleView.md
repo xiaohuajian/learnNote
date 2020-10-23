@@ -1,0 +1,1 @@
+recyclerView的LayoutManager 可以写在xml 里面，app:layoutManager=“linearLayoutManger”， 还有这个骚操作，自己一直都不知道。

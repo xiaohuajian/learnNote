@@ -4,7 +4,7 @@
 
 只有viewGroup才有这个属性，普通view 没有这个属性。这是因为view的测量需要父view的Layout 和子view 的大小才能确定最终的大小；运用这个`ayoutparam` 有几种情况（对某个viewGroup （如ReletiveLayout、FrameLayout）添加一个子Textview；
 
-1. **这个子view之前是没有存在xml，纯粹是靠代码进行添加**，可以先构造一个对应viewGroup的layoutparams，然后根据需求设置params，设置好了，最后给子view 。
+1. **这个子view之前是没有存在xml，纯粹是靠代码进行添加**，可以先构造一个对应viewGroup的layoutparams，然后根据需求设置params，设置好了，最后给子view 。(**(这里的LayoutParam 一定要是)**)
 
    ```
     //对该viewGroup 构造一个layoutParam ，这个时候宽高的设置需要根据我们期望子view采用什么宽高而定
@@ -26,7 +26,29 @@
            }
    ```
 
-   
+
+总结一下：LayoutParam
+
+- 凭空在某个viewGroup添加一个view，这个view 对应的LayoutParam一定要是该viewGroup，比如说LinearLayout 的viewGroup中添加一个view，给该view设置LayoutParams 时就要用LinearLayoutParam, 这样最好，也可以用其他的LayoutParam 但这样不怎么好；同时，凭空添加还包括inflator 一个布局，这种情况和new 一个view本质一样的，layoutParam一样处理。
+
+- 如果修改某个view的LayoutParams 就可以按照第二点处理；
+
+另外总结一下RelativeLayout的使用：
+
+```
+RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+        layoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.topMargin = dip2px(this, 40);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        layoutParams.addRule(RelativeLayout.ALIGN_LEFT, R.id.ref1);
+        // 就这么几个了，没有其他了
+```
+
+LinearLayoutParam的：
+
+![image-20200928155439190](https://tva1.sinaimg.cn/large/007S8ZIlly1gj6f3imiiuj30mb0at40z.jpg)
+
+其实，两个LayoutParam 都没有多少方法。
 
 ### getWidth、getMeasureWidth 区别
 

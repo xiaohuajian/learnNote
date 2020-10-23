@@ -41,8 +41,8 @@ drwx------   2    root   root     4096   Sep  5 14:09 .gconfd
 
 - 第一个字符代表这个文件是『目录、文件或链接文件等等』：
 
-  - 当为[ d ]则是目录，例如[上表](http://cn.linux.vbird.org/linux_basic/0210filepermission_2.php#table2.1.1)档名为『.gconf』的那一行；
-  - 当为[ - ]则是文件，例如[上表](http://cn.linux.vbird.org/linux_basic/0210filepermission_2.php#table2.1.1)档名为『install.log』那一行；
+  - 当为[ d ]则是目录，例如[上表](http://cn.linux.vbird.org/linux_basic/0210filepermission_2.php#table2.1.1)文件名为『.gconf』的那一行；
+  - 当为[ - ]则是文件，例如[上表](http://cn.linux.vbird.org/linux_basic/0210filepermission_2.php#table2.1.1)文件名为『install.log』那一行；
   - 若是[ l ]则表示为连结档(link file)；
   - 若是[ b ]则表示为设备文件里面的可供储存的接口设备(可随机存取设备)；
   - 若是[ c ]则表示为设备文件里面的串行端口设备，例如键盘、鼠标(一次性读取设备)。
@@ -56,9 +56,9 @@ drwx------   2    root   root     4096   Sep  5 14:09 .gconfd
   |             | 内容         | 叠代物件   | r            | w            | x                     |
   | ----------- | ------------ | ---------- | ------------ | ------------ | --------------------- |
   | 文件        | 详细资料data | 文件资料夹 | 读到文件内容 | 修改文件内容 | 执行文件内容          |
-  | 目录/文件夹 | 档名         | 可分类抽屉 | 读到档名     | 修改档名     | 进入该目录的权限(key) |
+  | 目录/文件夹 | 文件名       | 可分类抽屉 | 读到文件名   | 修改文件名   | 进入该目录的权限(key) |
 
-- 第二栏表示有多少档名连结到此节点(i-node)
+- 第二栏表示有多少文件名连结到此节点(i-node)
 
 - 第三栏表示这个文件(或目录)的『拥有者账号』
 
@@ -136,7 +136,7 @@ chmod a+w .bashrc
 
 ### 常见文件扩展名
 
-- *.sh ： 脚本或批次档(scripts)，因为批次档为使用shell写成的，所以副档名就编成.sh 啰；
+- *.sh ： 脚本或批次档(scripts)，因为批次档为使用shell写成的，所以副文件名就编成.sh 啰；
 - *Z, *.tar, *.tar.gz, *.zip, *.tgz： 经过打包的压缩档。这是因为压缩软体分别为gunzip, tar 等等的，由于不同的压缩软体，而取其相关的扩展名啰！
 
 ### 常见命令
@@ -189,21 +189,21 @@ FHS针对目录树架构仅定义出三层目录底下应该放置什么资料�
 
 常见目录名称和其作用：
 
-| 目录       | 应放置档案内容                                               |
+| 目录       | 应放置文件内容                                               |
 | ---------- | ------------------------------------------------------------ |
 |            | ==第一部份：FHS 要求必须要存在的目录==                       |
 | /bin       | ==系统有很多放置执行档的目录，但/bin比较特殊==。因为/bin放置的是在单人维护模式下还能够被操作的指令。 在/bin底下的指令可以被root与一般帐号所使用，主要有：cat, chmod, chown, date, mv, mkdir, cp, bash等等常用的指令。 |
-| /boot      | ==这个目录主要在放置开机会使用到的档案==，包括Linux核心档案以及开机选单与开机所需设定档等等。 Linux kernel常用的档名为：vmlinuz，如果使用的是grub2这个开机管理程式，则还会存在/boot/grub2/这个目录喔！ |
-| /dev       | 在Linux系统上，任何装置与周边设备都是以档案的型态存在于这个目录当中的。你只要透过存取这个目录底下的某个档案，就等于存取某个装置啰～比要重要的档案有/dev/null, /dev/zero, /dev/tty , /dev/loop*, / dev/sd*等等 |
-| /etc       | ==系统主要的设定档几乎都放置在这个目录内，例如人员的帐号密码档、各种服务的启始档等等==。一般来说，这个目录下的各档案属性是可以让一般使用者查阅的，但是只有root有权力修改。FHS建议不要放置可执行档(binary)在这个目录中喔。比较重要的档案有： /etc/modprobe.d/, /etc/passwd, /etc/fstab, /etc/issue等等。另外FHS还规范几个重要的目录最好要存在/etc/目录下喔：<br />/etc/opt(必要)：这个目录在放置第三方协力软体/opt的相关设定档/etc/X11/(建议)：与X Window有关的各种设定档都在这里，尤其是xorg.conf这个X Server的设定档。/etc/sgml/(建议)：与SGML格式有关的各项设定档/etc/xml/(建议)：与XML格式有关的各项设定档 |
-| /lib       | 系统的函式库非常的多，而/lib放置的则是在开机时会用到的函式库，以及在/bin或/sbin底下的指令会呼叫的函式库而已。什么是函式库呢？妳可以将他想成是『外挂』，某些指令必须要有这些『外挂』才能够顺利完成程式的执行之意。另外FHS还要求底下的目录必须要存在：<br />/lib/modules/：这个目录主要放置可抽换式的核心相关模组(驱动程式)喔！ |
-| /media     | media是『媒体』的英文，顾名思义，==这个/media底下放置的就是可移除的装置啦==！ 包括软碟、光碟、DVD等等装置都暂时挂载于此。常见的档名有：/media/floppy, /media/cdrom等等。 |
+| /boot      | ==这个目录主要在放置开机会使用到的文件==，包括Linux核心文件以及开机选单与开机所需设定档等等。 Linux kernel常用的文件名为：vmlinuz，如果使用的是grub2这个开机管理程序，则还会存在/boot/grub2/这个目录喔！ |
+| /dev       | 在Linux系统上，任何装置与周边设备都是以文件的型态存在于这个目录当中的。你只要透过存取这个目录底下的某个文件，就等于存取某个装置啰～比要重要的文件有/dev/null, /dev/zero, /dev/tty , /dev/loop*, / dev/sd*等等 |
+| /etc       | ==系统主要的设定档几乎都放置在这个目录内，例如人员的帐号密码档、各种服务的启始档等等==。一般来说，这个目录下的各文件属性是可以让一般使用者查阅的，但是只有root有权力修改。FHS建议不要放置可执行档(binary)在这个目录中喔。比较重要的文件有： /etc/modprobe.d/, /etc/passwd, /etc/fstab, /etc/issue等等。另外FHS还规范几个重要的目录最好要存在/etc/目录下喔：<br />/etc/opt(必要)：这个目录在放置第三方协力软体/opt的相关设定档/etc/X11/(建议)：与X Window有关的各种设定档都在这里，尤其是xorg.conf这个X Server的设定档。/etc/sgml/(建议)：与SGML格式有关的各项设定档/etc/xml/(建议)：与XML格式有关的各项设定档 |
+| /lib       | 系统的函式库非常的多，而/lib放置的则是在开机时会用到的函式库，以及在/bin或/sbin底下的指令会呼叫的函式库而已。什么是函式库呢？妳可以将他想成是『外挂』，某些指令必须要有这些『外挂』才能够顺利完成程序的执行之意。另外FHS还要求底下的目录必须要存在：<br />/lib/modules/：这个目录主要放置可抽换式的核心相关模组(驱动程序)喔！ |
+| /media     | media是『媒体』的英文，顾名思义，==这个/media底下放置的就是可移除的装置啦==！ 包括软碟、光碟、DVD等等装置都暂时挂载于此。常见的文件名有：/media/floppy, /media/cdrom等等。 |
 | /mnt       | 如果妳想要暂时挂载某些额外的装置，一般建议妳可以放置到这个目录中。在古早时候，这个目录的用途与/media相同啦！只是有了/media之后，这个目录就用来暂时挂载用了。 |
 | /opt       | ==这个是给第三方协力软件放置的目录==。什么是第三方协力软体啊？举例来说，KDE这个桌面管理系统是一个独立的计画，不过他可以安装到Linux系统中，因此KDE的软体就建议放置到此目录下了。另外，如果妳想要自行安装额外的软体(非原本的distribution提供的)，那么也能够将你的软体安装到这里来。不过，以前的Linux系统中，我们还是习惯放置在/usr/local目录下呢！ |
 | /run       | 早期的FHS 规定系统开机后所产生的各项资讯应该要放置到/var/run 目录下，新版的FHS 则规范到/run 底下。由于/run 可以使用记忆体来模拟，因此效能上会好很多！ |
-| /sbin      | Linux有非常多指令是用来设定系统环境的，这些指令只有root才能够利用来『设定』系统，其他使用者最多只能用来『查询』而已。 ==放在/sbin底下的为开机过程中所需要的，里面包括了开机、修复、还原系统所需要的指令==。 至于某些伺服器软体程式，一般则放置到/usr/sbin/当中。至于本机自行安装的软体所产生的系统执行档(system binary)，则放置到/usr/local/sbin/当中了。常见的指令包括：fdisk, fsck, ifconfig, mkfs等等。 |
+| /sbin      | Linux有非常多指令是用来设定系统环境的，这些指令只有root才能够利用来『设定』系统，其他使用者最多只能用来『查询』而已。 ==放在/sbin底下的为开机过程中所需要的，里面包括了开机、修复、还原系统所需要的指令==。 至于某些伺服器软体程序，一般则放置到/usr/sbin/当中。至于本机自行安装的软体所产生的系统执行档(system binary)，则放置到/usr/local/sbin/当中了。常见的指令包括：fdisk, fsck, ifconfig, mkfs等等。 |
 | /srv       | srv可以视为『service』的缩写，是一些网路服务启动之后，这些服务所需要取用的资料目录。常见的服务例如WWW, FTP等等。举例来说，WWW伺服器需要的网页资料就可以放置在/srv/www/里面。不过，系统的服务资料如果尚未要提供给网际网路任何人浏览的话，预设还是建议放置到/var/lib 底下即可。 |
-| /tmp       | 这是让一般使用者或者是正在执行的程序暂时放置档案的地方。这个目录是任何人都能够存取的，所以你需要定期的清理一下。当然，重要资料不可放置在此目录啊！因为FHS甚至建议在开机时，应该要将/tmp下的资料都删除唷！ |
+| /tmp       | 这是让一般使用者或者是正在执行的程序暂时放置文件的地方。这个目录是任何人都能够存取的，所以你需要定期的清理一下。当然，重要资料不可放置在此目录啊！因为FHS甚至建议在开机时，应该要将/tmp下的资料都删除唷！ |
 | /usr       | 第二层FHS 设定，后续介绍                                     |
 | /var       | 第二曾FHS 设定，主要为放置变动性的资料，后续介绍             |
 |            | ==**第二部份：FHS 建议可以存在的目录**==                     |
@@ -255,8 +255,8 @@ usr 指的是软件资源，而非用户相关，这个目录等价于windows �
 
 ## 绝对/相对路径
 
-- 绝对路径：由根目录(/)开始写起的档名或目录名称，例如/home/dmtsai/.bashrc；
-- 相对路径：相对于目前路径的档名写法。例如./home/dmtsai或../../home/dmtsai/等等。==反正开头不是/就属于相对路径的写法==
+- 绝对路径：由根目录(/)开始写起的文件名或目录名称，例如/home/dmtsai/.bashrc；
+- 相对路径：相对于目前路径的文件名写法。例如./home/dmtsai或../../home/dmtsai/等等。==反正开头不是/就属于相对路径的写法==
 
 相对路径是以『你当前所在路径的相对位置』来表示的。举例来说，你目前在/home 这个目录下， 如果想要进入/var/log 这个目录时，可以怎么写呢？
 
@@ -357,24 +357,24 @@ drwx--x--x . 2 root root 6 Jun 4 19:05 test2
 ### 查看 ls
 
 ```
-[root@study ~]# ls [-aAdfFhilnrRSt]档名或目录名称.. 
-[root@study ~]# ls [--color={never,auto,always}]档名或目录名称.. 
-[root@ study ~]# ls [--full-time]档名或目录名称.. 
+[root@study ~]# ls [-aAdfFhilnrRSt]文件名或目录名称.. 
+[root@study ~]# ls [--color={never,auto,always}]文件名或目录名称.. 
+[root@ study ~]# ls [--full-time]文件名或目录名称.. 
 选项与参数：
  -a ：全部的文件，连同隐藏档(开头为.的文件)一起列出来(常用)
 -A ：全部的文件，连同隐藏档，但不包括. 与.. 这两个目录
 -d ：仅列出目录本身，而不是列出目录内的文件资料(常用)
--f ：直接列出结果，而不进行排序(ls 预设会以档名排序！)
+-f ：直接列出结果，而不进行排序(ls 预设会以文件名排序！)
 -F ：根据文件、目录等资讯，给予附加资料结构，例如：
       *:代表可执行档； /:代表目录； =:代表socket 文件； |:代表FIFO 文件；
 -h ：将文件容量以人类较易读的方式(例如GB, KB 等等)列出来；
 -i ：列出inode 号码，inode 的意义下一章将会介绍；
 -l ：长资料串列出，包含文件的属性与权限等等资料；(常用)
 -n ：列出UID 与GID 而非使用者与群组的名称(UID与GID会在帐号管理提到！)
--r ：将排序结果反向输出，例如：原本档名由小到大，反向则为由大到小；
+-r ：将排序结果反向输出，例如：原本文件名由小到大，反向则为由大到小；
 -R ：连同子目录内容一起列出来，等于该目录下的所有文件都会显示出来；
--S ：以文件容量大小排序，而不是用档名排序；
--t ：依时间排序，而不是用档名。
+-S ：以文件容量大小排序，而不是用文件名排序；
+-t ：依时间排序，而不是用文件名。
 --color=never ：不要依据文件特性给予颜色显示；
 --color=always ：显示颜色
 --color=auto ：让系统自行依据设定来判断是否给予颜色
@@ -421,9 +421,9 @@ root@study ~]# rm [-fir]文件或目录
 [root@study ~]# cd /tmp 
 [root@study tmp]# rm -i bashrc 
 rm: remove regular file `bashrc'? y 
-#如果加上-i的选项就会主动询问喔，避免你删除到错误的档名！
+#如果加上-i的选项就会主动询问喔，避免你删除到错误的文件名！
 
-范例二：透过万用字符*的帮忙，将/tmp底下开头为bashrc的档名通通删除： 
+范例二：透过万用字符*的帮忙，将/tmp底下开头为bashrc的文件名通通删除： 
 [root@study tmp]# rm -i bashrc* 
 #注意那个星号，代表的是0到无穷多个任意字符喔！很好用的东西！
 
@@ -463,7 +463,7 @@ rm: remove regular empty file `/ tmp/etc/crypttab'? ^C   <==按下[ctrl]+c中断
 范例二：将刚刚的目录名称更名为mvtest2 
 [root@study tmp]# mv mvtest mvtest2  <==这样就更名了！简单～
 #其实在Linux底下还有个有趣的指令，名称为rename，
-# 该指令专职进行多个档名的同时更名，并非针对单一档名变更，与mv不同。请man rename。
+# 该指令专职进行多个文件名的同时更名，并非针对单一文件名变更，与mv不同。请man rename。
 
 范例三：再建立两个文件，再全部移动到/tmp/mvtest2当中 
 [root@study tmp]# cp ~/.bashrc bashrc1 
@@ -603,11 +603,11 @@ which 可以找出在PATH 配置了环境变量的文件命令。即这个指令
 选项或参数：
 -a ：将所有由PATH 目录中可以找到的指令均列出，而不止第一个被找到的指令名称
 
-范例一：搜寻ifconfig这个指令的完整档名 
+范例一：搜寻ifconfig这个指令的完整文件名 
 [root@study ~]# which ifconfig
 /sbin/ifconfig 
 
-范例二：用which去找出which的档名为何？
+范例二：用which去找出which的文件名为何？
 [root@study ~]# which which
 alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
         /bin/alias
@@ -616,7 +616,7 @@ alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-ti
 # 那就是所谓的『命令别名』，意思是输入which 会等于后面接的那串指令啦！
 # 更多的资料我们会在bash 章节中再来谈的！
 
-范例三：请找出history这个指令的完整档名 
+范例三：请找出history这个指令的完整文件名 
 [root@study ~]# which history
 /usr/bin/which: no history in (/usr/local/sbin:/usr/local/bin:/sbin:/bin:
 /usr/sbin:/usr/bin:/root/bin)
@@ -624,7 +624,7 @@ alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-ti
 
 ### 文件查找
 
-**whereis (由一些特定的目录中寻找文件档名)**
+**whereis (由一些特定的目录中寻找文件文件名)**
 
 由于whereis 只会在特定的目录，针对/bin /sbin 底下的执行文件， 以及/usr/share/man 底下的man page 文件；
 
@@ -637,14 +637,14 @@ alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-ti
 -s :只找source 来源文件
 -u :搜寻不在上述三个项目当中的其他特殊文件
 
-范例一：请找出ifconfig这个档名 
+范例一：请找出ifconfig这个文件名 
 [root@study ~]# whereis ifconfig
 ifconfig: /sbin/ifconfig /usr/share/man/man8/ifconfig.8.gz
 
-范例二：只找出跟passwd有关的『说明文件』档名(man page) 
-[root@study ~]# whereis passwd      #全部的档名通通列出来！
+范例二：只找出跟passwd有关的『说明文件』文件名(man page) 
+[root@study ~]# whereis passwd      #全部的文件名通通列出来！
 passwd: /usr/bin/passwd /etc/passwd /usr/share/man/man1/passwd.1.gz /usr/share/man/man5/passwd.5.gz
-[root@study ~]# whereis -m passwd   #只有在man里面的档名才抓出来！
+[root@study ~]# whereis -m passwd   #只有在man里面的文件名才抓出来！
 passwd: /usr/share/man/man1/passwd.1.gz /usr/share/man/man5/passwd.5.gz
 ```
 
@@ -654,12 +654,12 @@ passwd: /usr/share/man/man1/passwd.1.gz /usr/share/man/man5/passwd.5.gz
 [root@study ~]# locate [-ir] keyword 
 选项与参数：
 -i ：忽略大小写的差异；
--c ：不输出档名，仅计算找到的文件数量
+-c ：不输出文件名，仅计算找到的文件数量
 -l ：仅输出几行的意思，例如输出五行则是-l 5
 -S ：输出locate 所使用的资料库文件的相关资讯，包括该资料库纪录的文件/目录数量等
--r ：后面可接正规表示法的显示方式
+-r ：后面可接正则表达式的显示方式
 
-范例一：找出系统中所有与passwd相关的档名，且只列出5个 
+范例一：找出系统中所有与passwd相关的文件名，且只列出5个 
 [root@study ~]# locate -l 5 passwd
 /etc/passwd
 /etc/passwd-
@@ -667,7 +667,7 @@ passwd: /usr/share/man/man1/passwd.1.gz /usr/share/man/man5/passwd.5.gz
 /etc/security/opasswd
 /usr/bin/gpasswd
 
-范例二：列出locate查询所使用的资料库文件之档名与各资料数量 
+范例二：列出locate查询所使用的资料库文件之文件名与各资料数量 
 [root@study ~]# locate -S
 Database /var/lib/mlocate/mlocate.db:
         8,086 directories      #总纪录目录数 
@@ -676,7 +676,7 @@ Database /var/lib/mlocate/mlocate.db:
         2,349,150 bytes used to store database
 ```
 
-locate 的使用更简单，直接在后面输入『文件的部分名称』后，就能够得到结果。举上面的例子来说，我输入locate passwd ，那么在完整档名(包含路径名称) 当中，只要有passwd 在其中， 就会被显示出来的；
+locate 的使用更简单，直接在后面输入『文件的部分名称』后，就能够得到结果。举上面的例子来说，我输入locate passwd ，那么在完整文件名(包含路径名称) 当中，只要有passwd 在其中， 就会被显示出来的；
 
 使用locate来寻找资料的时候特别的快，这是因为locate寻找的资料是由『已建立的资料库/var/lib/mlocate/』里面的资料所搜寻到的，所以不用直接在去硬碟当中存取资料！
 
@@ -684,8 +684,8 @@ locate 的使用更简单，直接在后面输入『文件的部分名称』后�
 
 那能否手动更新资料库哪？当然可以啊！更新locate 资料库的方法非常简单，直接输入『 updatedb 』就可以了！updatedb 指令会去读取/etc/updatedb.conf 这个设定档的设定，然后再去硬盘里面进行搜寻文件名的动作， 最后就更新整个资料库文件啰！因为updatedb 会去搜寻硬盘，所以当你执行updatedb 时，可能会等待数分钟的时间喔！
 
-- updatedb：根据/etc/updatedb.conf 的设定去搜寻系统硬碟内的档名，并更新/var/lib/mlocate 内的资料库文件；
-- locate：依据/var/lib/mlocate 内的资料库记载，找出使用者输入的关键字档名。
+- updatedb：根据/etc/updatedb.conf 的设定去搜寻系统硬碟内的文件名，并更新/var/lib/mlocate 内的资料库文件；
+- locate：依据/var/lib/mlocate 内的资料库记载，找出使用者输入的关键字文件名。
 
 **find**
 
@@ -694,9 +694,9 @@ locate 的使用更简单，直接在后面输入『文件的部分名称』后�
 选项与参数：
 1. 与时间有关的选项：共有-atime, -ctime 与-mtime ，以-mtime 说明
    -mtime n ：n 为数字，意义为在n 天之前的『一天之内』被更动过内容的文件；
-   -mtime +n ：列出在n 天之前(不含n 天本身)被更动过内容的文件档名；
-   -mtime -n ：列出在n 天之内(含n 天本身)被更动过内容的文件档名。
-   -newer file ：file 为一个存在的文件，列出比file 还要新的文件档名
+   -mtime +n ：列出在n 天之前(不含n 天本身)被更动过内容的文件文件名；
+   -mtime -n ：列出在n 天之内(含n 天本身)被更动过内容的文件文件名。
+   -newer file ：file 为一个存在的文件，列出比file 还要新的文件文件名
 
 范例一：将过去系统上面24小时内有更动过内容(mtime)的文件列出 
 [root@study ~]# find / -mtime 0 
@@ -709,7 +709,7 @@ locate 的使用更简单，直接在后面输入『文件的部分名称』后�
 # -newer用在分辨两个文件之间的新旧关系是很有用的！
 ```
 
-知道atime, ctime与mtime的意义，如果你想要找出一天内被更动过的文件名称，可以使用上述范例一的作法。但如果我想要找出『4天内被更动过的文件档名』呢？那可以使用『 find /var -mtime -4』。那如果是『4天前的那一天』就用『 find /var -mtime 4』。有没有加上『+, -』差别很大喔！我们可以用简单的图示来说明一下：
+知道atime, ctime与mtime的意义，如果你想要找出一天内被更动过的文件名称，可以使用上述范例一的作法。但如果我想要找出『4天内被更动过的文件文件名』呢？那可以使用『 find /var -mtime -4』。那如果是『4天前的那一天』就用『 find /var -mtime 4』。有没有加上『+, -』差别很大喔！我们可以用简单的图示来说明一下：
 
 
 
@@ -719,9 +719,9 @@ locate 的使用更简单，直接在后面输入『文件的部分名称』后�
 
 图中最右边为目前的时间，越往左边则代表越早之前的时间轴啦。由图6.5.1 我们可以清楚的知道：
 
-- +4代表大于等于5天前的档名：ex> find /var -mtime +4
-- -4代表小于等于4天内的文件档名：ex> find /var -mtime -4
-- 4则是代表4-5那一天的文件档名：ex> find /var -mtime 4
+- +4代表大于等于5天前的文件名：ex> find /var -mtime +4
+- -4代表小于等于4天内的文件文件名：ex> find /var -mtime -4
+- 4则是代表4-5那一天的文件文件名：ex> find /var -mtime 4
 
 其他find 的用法：
 
@@ -756,7 +756,7 @@ locate 的使用更简单，直接在后面输入『文件的部分名称』后�
 
 - 可使用的指令：例如cd 等变换工作目录的指令；
 - 目录所需权限：使用者对这个目录至少需要具有x的权限
-- 额外需求：如果使用者想要在这个目录内利用ls 查阅档名，则使用者对此目录还需要r 的权限。
+- 额外需求：如果使用者想要在这个目录内利用ls 查阅文件名，则使用者对此目录还需要r 的权限。
 
 二、使用者在某个目录内读取一个文件的基本权限为何？
 
@@ -796,35 +796,35 @@ locate 的使用更简单，直接在后面输入『文件的部分名称』后�
 - 一个文件记录的时间参数有三种，分别是access time(atime), status time (ctime), modification time(mtime)，ls 预设显示的是mtime。
 - 除了传统的rwx权限之外，在Ext2/Ext3/Ext4/xfs文件系统中，还可以使用chattr与lsattr设定及观察隐藏属性。常见的包括只能新增资料的+a 与完全不能更动文件的+i 属性。
 - 新建文件/目录时，新文件的预设权限使用umask 来规范。预设目录完全权限为drwxrwxrwx， 文件则为-rw-rw-rw-。
-- 文件具有SUID的特殊权限时，代表当使用者执行此一binary程式时，在执行过程中使用者会暂时具有程式拥有者的权限
+- 文件具有SUID的特殊权限时，代表当使用者执行此一binary程序时，在执行过程中使用者会暂时具有程序拥有者的权限
 - 目录具有SGID的特殊权限时，代表使用者在这个目录底下新建的文件之群组都会与该目录的群组名称相同。
 - 目录具有SBIT的特殊权限时，代表在该目录下使用者建立的文件只有自己与root能够删除！
 - 观察文件的类型可以使用file 指令来观察；
-- 搜寻指令的完整档名可用which 或type ，这两个指令都是透过PATH 变量来搜寻档名；
-- 搜寻文件的完整档名可以使用whereis 找特定目录或locate 到资料库去搜寻，而不实际搜寻文件系统；
+- 搜寻指令的完整文件名可用which 或type ，这两个指令都是透过PATH 变量来搜寻文件名；
+- 搜寻文件的完整文件名可以使用whereis 找特定目录或locate 到资料库去搜寻，而不实际搜寻文件系统；
 - 利用find 可以加入许多选项来直接查询文件系统，以获得自己想要知道的文件名；
 
 # Linux 压缩
 
-在Linux的环境中，压缩文件的副档名大多是：『*.tar, *.tar.gz, *.tgz, *.gz, *.Z, *.bz2, *.xz』，Linux 支持的压缩指令非常多，且不同的指令所用的压缩技术并不相同。且各个压缩所用的原理不同
+在Linux的环境中，压缩文件的副文件名大多是：『*.tar, *.tar.gz, *.tgz, *.gz, *.Z, *.bz2, *.xz』，Linux 支持的压缩指令非常多，且不同的指令所用的压缩技术并不相同。且各个压缩所用的原理不同
 
 ```
-*.Z compress 程式压缩的文件；
-*.zip zip 程式压缩的文件；
-*.gz gzip 程式压缩的文件；
-*.bz2 bzip2 程式压缩的文件；
-*.xz xz 程式压缩的文件；
-*.tar tar 程式打包的资料，并没有压缩过；
-*.tar.gz tar 程式打包的文件，其中并且经过gzip 的压缩
-*.tar.bz2 tar 程式打包的文件，其中并且经过bzip2 的压缩
-*.tar.xz tar 程式打包的文件，其中并且经过xz 的压缩
+*.Z compress 程序压缩的文件；
+*.zip zip 程序压缩的文件；
+*.gz gzip 程序压缩的文件；
+*.bz2 bzip2 程序压缩的文件；
+*.xz xz 程序压缩的文件；
+*.tar tar 程序打包的资料，并没有压缩过；
+*.tar.gz tar 程序打包的文件，其中并且经过gzip 的压缩
+*.tar.bz2 tar 程序打包的文件，其中并且经过bzip2 的压缩
+*.tar.xz tar 程序打包的文件，其中并且经过xz 的压缩
 ```
 
 Linux上常见的压缩指令就是gzip, bzip2。还有兼容windows的zip。说说这个tar，这个tar没有压缩功能，只是打包功能，把众多的文件夹打包到一起，然后再用zip去压缩，所以说有了tar.zip 这样的后缀名。
 
 ```
-[dmtsai@study ~]$ gzip [-cdtv#]档名 
-[dmtsai@study ~]$ zcat档名.gz 
+[dmtsai@study ~]$ gzip [-cdtv#]文件名 
+[dmtsai@study ~]$ zcat文件名.gz 
 选项与参数：
 -c ：将压缩的资料输出到萤幕上，可透过资料流重导向来处理；
 -d ：解压缩的参数；
@@ -842,20 +842,20 @@ Mac 系统没有gzip这个命令，在linux中，使用该命令会使之前的�
 上面谈到的指令大多仅能针对单一文件来进行压缩，虽然gzip, bzip2, xz也能够针对目录来进行压缩，不过，这两个指令对目录的压缩指的是『将目录内的所有文件"分别"进行压缩』的动作！而不像在Windows的系统，可以使用类似[WinRAR](http://www.rar.com.tw/)这一类的压缩软件来将好多资料『包成一个文件』的样式。
 
 ```
-[dmtsai@study ~]$ tar [-z|-j|-J] [cv] [-f待建立的新档名] filename...  <==打包与压缩 
-[dmtsai@study ~]$ tar [ -z|-j|-J] [tv] [-f既有的tar档名]              <==察看档名 
-[dmtsai@study ~]$ tar [-z|-j|-J] [xv] [ -f既有的tar档名] [-C目录]    <==解压缩
+[dmtsai@study ~]$ tar [-z|-j|-J] [cv] [-f待建立的新文件名] filename...  <==打包与压缩 
+[dmtsai@study ~]$ tar [ -z|-j|-J] [tv] [-f既有的tar文件名]              <==察看文件名 
+[dmtsai@study ~]$ tar [-z|-j|-J] [xv] [ -f既有的tar文件名] [-C目录]    <==解压缩
 选项与参数：
--c ：建立打包文件，可搭配-v 来察看过程中被打包的档名(filename)
--t ：察看打包文件的内容含有哪些档名，重点在察看『档名』就是了；
+-c ：建立打包文件，可搭配-v 来察看过程中被打包的文件名(filename)
+-t ：察看打包文件的内容含有哪些文件名，重点在察看『文件名』就是了；
 -x ：解打包或解压缩的功能，可以搭配-C (大写) 在特定目录解开
       特别留意的是， -c, -t, -x 不可同时出现在一串指令列中。
--z ：透过gzip 的支援进行压缩/解压缩：此时档名最好为*.tar.gz
--j ：透过bzip2 的支援进行压缩/解压缩：此时档名最好为*.tar.bz2
--J ：透过xz 的支援进行压缩/解压缩：此时档名最好为*.tar.xz
+-z ：透过gzip 的支援进行压缩/解压缩：此时文件名最好为*.tar.gz
+-j ：透过bzip2 的支援进行压缩/解压缩：此时文件名最好为*.tar.bz2
+-J ：透过xz 的支援进行压缩/解压缩：此时文件名最好为*.tar.xz
       特别留意， -z, -j, -J 不可以同时出现在一串指令列中
--v ：在压缩/解压缩的过程中，将正在处理的档名显示出来！
--f filename：-f 后面要立刻接要被处理的档名！建议-f 单独写一个选项啰！(比较不会忘记)
+-v ：在压缩/解压缩的过程中，将正在处理的文件名显示出来！
+-f filename：-f 后面要立刻接要被处理的文件名！建议-f 单独写一个选项啰！(比较不会忘记)
 -C 目录：这个选项用在解压缩，若要在特定目录解压缩，可以使用这个选项。
 
 其他后续练习会使用到的选项介绍：
@@ -1011,19 +1011,19 @@ vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊
 | :set nu :set nonu                 | 就是设定与取消行号啊！                                       |
 | :set hlsearch :set nohlsearch     | hlsearch 就是high light search(高亮度搜寻)。这个就是设定是否将搜寻的字串反白的设定值。预设值是hlsearch |
 | :set autoindent :set noautoindent | 是否自动缩排？autoindent 就是自动缩排。                      |
-| :set backup                       | 是否自动储存备份档？一般是nobackup 的， 如果设定backup 的话，那么当你更动任何一个文件时，则原始文件会被另存成一个档名为filename~ 的文件。举例来说，我们编辑hosts ，设定:set backup ，那么当更动hosts 时，在同目录下，就会产生hosts~ 档名的文件，记录原始的hosts 文件内容 |
+| :set backup                       | 是否自动储存备份档？一般是nobackup 的， 如果设定backup 的话，那么当你更动任何一个文件时，则原始文件会被另存成一个文件名为filename~ 的文件。举例来说，我们编辑hosts ，设定:set backup ，那么当更动hosts 时，在同目录下，就会产生hosts~ 文件名的文件，记录原始的hosts 文件内容 |
 | :set ruler                        | 还记得我们提到的右下角的一些状态列说明吗？这个ruler 就是在显示或不显示该设定值的啦！ |
 | :set showmode                     | 这个则是，是否要显示--INSERT-- 之类的字眼在左下角的状态列。  |
 | :set backspace=(012)              | 一般来说， 如果我们按下i 进入编辑模式后，可以利用倒退键(backspace) 来删除任意字符的。但是，某些distribution 则不许如此。此时，我们就可以透过backspace 来设定啰～ 当backspace 为2 时，就是可以删除任意值；0 或1 时，仅可删除刚刚输入的字符， 而无法删除原本就已经存在的文字了！ |
 | :set all                          | 显示目前所有的环境参数设定值。                               |
 | :set                              | 显示与系统预设值不同的设定参数， 一般来说就是你有自行变动过的设定参数啦！ |
-| :syntax on :syntax off            | 是否依据程式相关语法显示不同颜色？举例来说，在编辑一个纯文字档时，如果开头是以# 开始，那么该列就会变成蓝色。如果你懂得写程式，那么这个:syntax on 还会主动的帮你除错呢！但是， 如果你仅是编写纯文字文件，要避免颜色对你的萤幕产生的干扰，则可以取消这个设定。 |
+| :syntax on :syntax off            | 是否依据程序相关语法显示不同颜色？举例来说，在编辑一个纯文字档时，如果开头是以# 开始，那么该列就会变成蓝色。如果你懂得写程序，那么这个:syntax on 还会主动的帮你除错呢！但是， 如果你仅是编写纯文字文件，要避免颜色对你的萤幕产生的干扰，则可以取消这个设定。 |
 | :set bg=dark :set bg=light        | 可用以显示不同的颜色色调，预设是『 light 』。如果你常常发现注解的字体深蓝色实在很不容易看， 那么这里可以设定为dark 喔！试看看，会有不同的样式呢！ |
 
 ## 重点回顾
 
 - Linux 底下的设定档多为文字档，故使用vim 即可进行设定编辑；
-- vim 可视为程式编辑器，可用以编辑shell script, 设定档等，避免打错字；
+- vim 可视为程序编辑器，可用以编辑shell script, 设定档等，避免打错字；
 - vi 为所有unix like 的作业系统都会存在的编辑器，且执行速度快速；
 - vi 有三种模式，一般指令模式可变换到编辑与指令列模式，但编辑模式与指令列模式不能互换；
 - 常用的按键有i, [Esc], :wq 等；
@@ -1061,7 +1061,7 @@ vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊
 
   > 可以记录使用过的命令，而这些命令存在.bash_history 中
 
-- 命令和文档名补全 （tab键的强大）
+- 命令和文文件名补全 （tab键的强大）
 
   > - [Tab] 接在一串指令的第一个字的后面，则为命令补全；
   > - [Tab] 接在一串指令的第二个字以后时，则为『文件/文件名补齐』！
@@ -1094,7 +1094,7 @@ vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊
       file ：表示为外部指令；
       alias ：表示该指令为命令别名所设定的名称；
       builtin ：表示该指令为bash 内建的指令功能；
--p ：如果后面接的name 为外部指令时，才会显示完整档名；
+-p ：如果后面接的name 为外部指令时，才会显示完整文件名；
 -a ：会由PATH 变量定义的路径中，将所有含name 的指令都列出来，包含alias
 
 范例一：查询一下ls这个指令是否为bash内建？
@@ -1285,7 +1285,7 @@ _=/usr/bin/env
   代表使用者的家目录。还记得我们可以使用cd ~去到自己的家目录吗？或者利用cd就可以直接回到使用者家目录了。那就是取用这个变量啦～有很多程序都可能会取用到这个变量的值！
 
 - **SHELL**
-  告知我们，目前这个环境使用的SHELL是哪支程式？Linux预设使用/bin/bash的啦！而mac的是bin/zsh
+  告知我们，目前这个环境使用的SHELL是哪支程序？Linux预设使用/bin/bash的啦！而mac的是bin/zsh
 
 - **HISTSIZE**
   这个与『历史命令』有关，亦即是，我们曾经下达过的指令可以被系统记录下来，而记录的『笔数』则是由这个值来设定的。
@@ -1709,20 +1709,20 @@ bash 预设的组合键给他汇整如下：
 `find /Users/shijianhua/Documents > file1 2> file2` 执行这样的命令即可。如果想追加则用 >> 替代。另外，如果想把两个信息都放到 同一个文件中，该怎么办呢？
 
 ```
-范例五：将指令的资料全部写入名为list的档案中 
+范例五：将指令的资料全部写入名为list的文件中 
 [dmtsai@study ~]$ find /home -name .bashrc > list 2> list   <==错误 
 [dmtsai@study ~]$ find /home - name .bashrc > list 2>&1      <==正确 
 [dmtsai@study ~]$ find /home -name .bashrc &> list          <==正确
 ```
 
-第一行错误的原因是，由于两股数据同时写入一个文件，又没有使用特殊的语法，此时两股资料可能会交叉写入该档案内，造成次序的错乱。。至于写入同一个档案的特殊语法如上表所示，你可以使用2>&1也可以使用 &> ，一般来说，鸟哥比较习惯使用2>&1的语法啦！
+第一行错误的原因是，由于两股数据同时写入一个文件，又没有使用特殊的语法，此时两股资料可能会交叉写入该文件内，造成次序的错乱。。至于写入同一个文件的特殊语法如上表所示，你可以使用2>&1也可以使用 &> ，一般来说，鸟哥比较习惯使用2>&1的语法啦！
 
 **Standard input < 或 <<**
 
 将原本需要由键盘输入的数据，改由文件内容来取代。
 
 ```
-范例六：利用cat指令来建立一个档案的简单流程 
+范例六：利用cat指令来建立一个文件的简单流程 
 [dmtsai@study ~]$ cat > catfile 
 testing
 cat file test 
@@ -1748,15 +1748,15 @@ OK now stop      <==只有这两行，不会存在关键字那一行！
 
 这里，不需要执行 ctrl + d ，通过eof 字符来实现，去除了键盘操纵，更加方便脚步的执行。
 
-那我能不能用纯文字档取代键盘的输入，也就是说，用某个档案的内容来取代键盘的敲击呢？ 可以的！
+那我能不能用纯文字档取代键盘的输入，也就是说，用某个文件的内容来取代键盘的敲击呢？ 可以的！
 
 ```
-范例七：用stdin取代键盘的输入以建立新档案的简单流程 
+范例七：用stdin取代键盘的输入以建立新文件的简单流程 
 [dmtsai@study ~]$ cat > catfile < ~/.bashrc 
 [dmtsai@study ~]$ ll catfile ~/.bashrc 
 -rw-r-- r--. 1 dmtsai dmtsai 231 Mar 6 06:06 /home/dmtsai/.bashrc
 -rw-rw-r--. 1 dmtsai dmtsai 231 Jul 9 18:58 catfile
- #注意看，这两个档案的大小会一模一样！几乎像是使用cp来复制一般！
+ #注意看，这两个文件的大小会一模一样！几乎像是使用cp来复制一般！
 ```
 
 > 我在mac 上测试 cat > sjhtest.txt < copy_temp.txt  没有成功，文档内容没有变化；
@@ -1861,7 +1861,7 @@ Grep 也是分析“行” 信息的，若当中有包含我们的字符，就�
 ```
 [dmtsai@study ~]$ grep [-acinv] [--color=auto] '搜寻字串' filename 
 选项与参数：
--a ：将binary 档案以text 档案的方式搜寻资料
+-a ：将binary 文件以text 文件的方式搜寻资料
 -c ：计算找到'搜寻字串' 的次数
 -i ：忽略大小写的不同，所以大小写视为相同
 -n ：顺便输出行号
@@ -1956,13 +1956,13 @@ arod:x: 1002:1003::/home/arod:/bin/bash
 
 ### 双向导向 tee
 
-我们知道 `>` 会将资料流整个传送给档案或装置，因此我们除非去读取该档案或装置， 否则就无法继续利用这个数据流。万一我想要将这个数据流的处理过程中将某段讯息存下来，应该怎么做？
+我们知道 `>` 会将资料流整个传送给文件或装置，因此我们除非去读取该文件或装置， 否则就无法继续利用这个数据流。万一我想要将这个数据流的处理过程中将某段讯息存下来，应该怎么做？
 
 > 其实，这个很好理解，比如java 中的输出流就只能read 一次，后面就读取不到了，都是一个道理，不过应该都是linux 这边衍生过来的。这一点linux 和 java是一致的，但是和c 不一样。
 
 ![pic](http://linux.vbird.org/linux_basic/0320bash//0320bash_5.png)
 
-tee 会同时将资料流分送到档案去与萤幕(screen)；而输出到萤幕的，其实就是stdout ，那就可以让下个指令继续处理喔！
+tee 会同时将资料流分送到文件去与萤幕(screen)；而输出到萤幕的，其实就是stdout ，那就可以让下个指令继续处理喔！
 
 ```
 [dmtsai@study ~]$ tee [-a] file 
@@ -1970,13 +1970,13 @@ tee 会同时将资料流分送到档案去与萤幕(screen)；而输出到萤�
 -a ：以累加(append) 的方式，将资料加入file 当中！
 
 [dmtsai@study ~]$ last | tee last.list | cut -d " " -f1 
-#这个范例可以让我们将last的输出存一份到last.list档案中；
+#这个范例可以让我们将last的输出存一份到last.list文件中；
 
 [dmtsai@study ~]$ ls -l /home | tee ~/homefile | more 
 #这个范例则是将ls的资料存一份到~/homefile ，同时萤幕也有输出讯息！
 
 [dmtsai@study ~]$ ls -l / | tee -a ~/homefile | more 
-#要注意！tee后接的档案会被覆盖，若加上-a这个选项则能将讯息累加。
+#要注意！tee后接的文件会被覆盖，若加上-a这个选项则能将讯息累加。
 ```
 
 ### 替换 tr、col 等等
@@ -2026,3 +2026,574 @@ daemon:x:2:2:daemon:/sbin:/sbin/nologin daemon:*:16372:0:99999:7:::
 
 ```
 
+
+
+# 正则表达式
+
+## 什么是正则表达式？
+
+简单的说，正则表达式就是处理字串的方法，他是以行为单位来进行字串的处理行为， 正则表达式透过一些特殊符号的辅助，可以让使用者轻易的达到『搜寻/删除/取代』某特定字串的处理程序！**他是一个标准，字符串处理标准**；所以说在很多的平台都有正则表达式的运用，我们了解了这些标准，就可以在各个平台地方使用了。比如：java、python、javaScript 都是支持正则表达式。
+
+一般的，正则表达式有基础版本的，也有扩展版本的。
+
+## 基础正则表达式
+
+### 语系对正则表达式影响
+
+由于不同语系的编码资料并不相同，所以就会造成资料截取结果的差异了。举例来说，在英文大小写的编码顺序中，zh_TW.big5及C这两种语系的输出结果分别如下：
+
+- LANG=C 时：0 1 2 3 4 ... ABCD ... Z abcd ...z
+- LANG=zh_TW 时：0 1 2 3 4 ... a A b B c C d D ... z Z
+
+记录一些常用和重要的字符含义：
+
+| 特殊符号      | 代表意义                                                   |
+| ------------- | ---------------------------------------------------------- |
+| **[:alnum:]** | 代表英文大小写字元及数字，亦即0-9, AZ, az                  |
+| **[:alpha:]** | 代表任何英文大小写字元，亦即AZ, az                         |
+| [:blank:]     | 代表空白键与[Tab] 按键两者                                 |
+| [:cntrl:]     | 代表键盘上面的控制按键，亦即包括CR, LF, Tab, Del.. 等等    |
+| **[:digit:]** | 代表数字而已，亦即0-9                                      |
+| [:graph:]     | 除了空白字元(空白键与[Tab] 按键) 外的其他所有按键          |
+| **[:lower:]** | 代表小写字符，亦即az                                       |
+| [:print:]     | 代表任何可以被列印出来的字元                               |
+| [:punct:]     | 代表标点符号(punctuation symbol)，亦即：" ' ? ! ; : # $... |
+| **[:upper:]** | 代表大写字元，亦即AZ                                       |
+| [:space:]     | 任何会产生空白的字元，包括空白键, [Tab], CR 等等           |
+| [:xdigit:]    | 代表16 进位的数字类型，因此包括： 0-9, AF, af 的数字与字元 |
+
+尤其上表中的[:alnum:], [:alpha:], [:upper:], [:lower:], [:digit:] 这几个一定要知道其含义。那他们有什么用呢？前面我们说了不同的语系设置可能导致字符的表现不同，这时候可以通过这些定义去消除这些差别，比如说 [:lower] 表示小写字母。
+
+###  正则表达式语法
+
+**常规类语法**
+
+| RE 字 符  | 意义与范例                                                   |
+| --------- | ------------------------------------------------------------ |
+| ^word     | 意义：**待搜寻的字串(word)在行首**！ 范例：搜寻行首为#开始的那一行，并列出行号grep -n '^#' regular_express.txt |
+| word$     | 意义：**待搜寻的字串(word)在行尾**！ 范例：将行尾为!的那一行列印出来，并列出行号grep -n '!$' regular_express.txt |
+| .         | 意义：**代表『一定有一个任意字符』**！ 范例：搜寻的字串可以是(eve) (eae) (eee) (ee)，但不能仅有(ee) ！亦即e与e中间『一定』仅有一个字元，而空白字元也是字元！grep -n 'ee' regular_express.txt |
+| \         | 意义：**shell的转义字符**，将特殊符号的特殊意义去除！ 范例：搜寻含有单引号'的那一行！grep -n  \\' regular_express.txt |
+| *         | 意义：**重复零个到无穷多个的前一个RE字符** 范例：找出含有(es) (ess) (esss)等等的字串，注意，因为*可以是0个，所以es也是符合带搜寻字串。另外，因为*为重复『前一个RE字符』的符号，因此，在*之前必须要紧接着一个RE字符喔！例如任意字元则为『.*』 ！grep -n 'ess*' regular_express.txt |
+| [list]    | 意义：**字元集合的RE字符，里面列出想要选取的字元（不过一个【】只能表示有一个字符）**！ 范例：搜寻含有(gl)或(gd)的那一行，需要特别留意的是，在[]当中『谨代表一个待搜寻的字元』，例如『 a[afl]y 』代表搜寻的字串可以是aay, afy, aly即[afl]代表a或f或l的意思！grep -n 'g[ld]' regular_express.txt |
+| [n1-  n2] | 意义：**字元集合的RE字符，里面列出想要选取的字元范围**！ 范例：搜寻含有任意数字的那一行！需特别留意，在字元集合[]中的减号-是有特殊意义的，他代表两个字元之间的所有连续字元！但这个连续与否与ASCII编码有关，因此，你的编码需要设定正确(在bash当中，需要确定LANG与LANGUAGE的变数是否正确！)例如所有大写字元则为[AZ]grep -n '[AZ]' regular_express.txt |
+| [^list]   | 意义：**字元集合的RE字符，里面列出不要的字串或范围**！ 范例：搜寻的字串可以是(oog) (ood)但不能是(oot) ，那个\^在[]内时，代表的意义是『反向选择』的意思。例如，我不要大写字元，则为[\^AZ]。但是，需要特别注意的是，如果以grep -n [\^AZ] regular_express.txt来搜寻，却发现该文件内的所有行都被列出，为什么？因为这个[\^AZ]是『非大写字元』的意思，因为每一行均有非大写字元，例如第一行的"Open Source"就有p,e,n,o....等等的小写字grep -n 'oo[\^t]' regular_express.txt |
+| \{n,m\}   | 意义：**连续n到m个的『前一个RE字符』** 意义：若为\{n\}则是连续n个的前一个RE字符， 意义：若是\{n,\}则是连续n个以上的前一个RE字符！ 范例：在g与g之间有2个到3个的o存在的字串，亦即(goog)(gooog)grep -n 'go\{2,3\}g' regular_express.txt |
+
+**扩展正则表达式**
+
+| RE 字符 | 意义与范例                                                   |
+| ------- | ------------------------------------------------------------ |
+| +       | 意义：重复『一个或一个以上』的前一个RE字符 范例：搜寻(god) (good) (goood)...等等的字串。那个o+代表『一个以上的o 』所以，底下的执行成果会将第1, 9, 13行列出来。egrep -n 'go+d' regular_express.txt |
+| ?       | 意义：『零个或一个』的前一个RE字符 范例：搜寻(gd) (god)这两个字串。那个o?代表『空的或1个o 』所以，上面的执行成果会将第13, 14行列出来。有没有发现到，这两个案例( 'go+d'与'go?d' )的结果集合与'go*d'相同？想想看，这是为什么喔！^_^egrep -n 'go?d' regular_express.txt |
+| \|      | 意义：用或( or )的方式找出数个字串 范例：搜寻gd或good这两个字串，注意，是『或』！所以，第1,9,14这三行都可以被列印出来喔！那如果还想要找出dog呢？egrep -n 'gd\|good' regular_express.txt egrep -n 'gd\|good\|dog' regular_express.txt |
+| ()      | 意义：找出『群组』字串 范例：搜寻(glad)或(good)这两个字串，因为g与d是重复的，所以，我就可以将la与oo列于( )当中，并以\|来分隔开来，就可以啦！egrep -n 'g(la\|oo)d' regular_express.txt |
+| ()+     | 意义：多个重复群组的判别 范例：将『AxyzxyzxyzxyzC』用echo叫出，然后再使用如下的方法搜寻一下！echo 'AxyzxyzxyzxyzC' \| egrep 'A(xyz)+C'上面的例子意思是说，我要找开头是A 结尾是C ，中间有一个以上的"xyz" 字串的意思～ |
+
+以上两类表达式，就是所有语法了，掌握了这些就掌握了正则表达式这一强大的武器，因为可以用它做各种炫酷的事情，而且很多工具类应用就是通过他来实现的。
+
+**接下来，列出常见的结论和重点：**
+
+- 正则表达式就是处理字串的方法，**他是以行为单位来进行字串的处理行为**；
+- 正则表达式透过一些特殊符号的辅助，可以让使用者轻易的达到『搜寻/删除/取代』某特定字串的处理程序；
+- 只要工具程序支援正则表达式，那么该工具程序就可以用来作为正则表达式的字串处理之用；
+- 正则表达式与通配符是完全不一样的东西！万用字元(wildcard) 代表的是bash 操作介面的一个功能， 但正则表达式则是一种字串处理的表示方式！
+- 使用grep 或其他工具进行正则表达式的字串比对时，因为编码的问题会有不同的状态，因此， 你最好将LANG 等变数设定为C 或者是en 等英文语系
+- grep 与egrep 在正则表达式里面是很常见的两支程序，其中， egrep 支援更严谨的正则表达式的语法；
+- 由于编码系统的不同，不同的语系(LANG) 会造成正则表达式撷取资料的差异。因此可利用特殊符号如[:upper:] 来替代编码范围较佳；
+- 由于严谨度的不同，正则表达式之上还有更严谨的延伸正则表达式；
+- 基础正则表达式的特殊字符有： *, ., [], [-], [^], ^, $ 等！
+- 常见的支援正则表达式的工具软体有： grep , sed, vim 等等
+- printf 可以透过一些特殊符号来将资料进行格式化输出；
+- awk 可以使用『栏位』为依据，进行资料的重新整理与输出；
+- 文件的比对中，可利用diff 及cmp 进行比对，其中diff 主要用在纯文字文件方面的新旧版本比对
+- patch 指令可以将旧版资料更新到新版(主要亦由diff 建立patch 的补丁来源文件)
+
+
+
+
+
+# Shell 脚本
+
+## 什么是shell 脚本
+
+Bash 是我们与系统沟通的一个桥梁，而shell 是Bash的一种代表。
+
+shell script是利用shell的功能所写的一个『程式(program)』，这个程式是使用纯文字档，将一些shell的语法与指令(含外部指令)写在里面，搭配正规表示法、管线命令与资料流重导向等功能，以达到我们所想要的处理目的。
+
+shell 脚本的好处：
+
+1. 可以批处理（类似程序运行一样），而不是只是运行一个命令；
+2. 自动化工作，类似jenkens，运维工作等
+
+### 基础语法：
+
+假设你写的这个程式文件名是 /home/dmtsai/shell.sh 好了，那如何执行这个文件？很简单，可以有底下几个方法：
+
+- 直接指令下达： shell.sh 文件必须要具备可读与可执行(rx) 的权限，然后：
+  - 绝对路径：使用/home/dmtsai/shell.sh 来下达指令；
+  - 相对路径：假设工作目录在/home/dmtsai/ ，则使用./shell.sh 来执行
+  - 变数『PATH』功能：将shell.sh 放在PATH 指定的目录内，例如： ~/bin/
+- 以bash 程式来执行：透过『 bash shell.sh 』或『 sh shell.sh 』来执行
+
+为何『 sh shell.sh 』也可以执行呢？这是因为/bin/sh其实就是/bin/bash (连结档)，使用sh shell.sh亦即告诉系统，我想要直接以bash的功能来执行shell.sh这个文件内的相关指令的意思，所以此时你的shell.sh只要有r的权限即可被执行喔！
+
+
+
+**数学运算**
+
+var=\$((运算内容))  eg：`result=$((2+​3))`
+
+就是说我们涉及到数学计算，必须要放到 $(( )) 里面，否则不生效，各种问题，记住一点要记住这一点。
+
+**不同的执行方式source** ，
+
+通过直接指令下达执行脚本，它会在一个新的bash环境来执行脚本内的指令！也就是说，使用这种执行方式时，其实script是在子程序的bash内执行的，其含义在于：『当子程序完成后，在子程序内的各项变数或动作将会结束而不会传回到父程序中。比如说，我们在脚本中创建了一个变量并赋值，当脚本结束后，在主程序获取那个脚本变量是获取不到的。想要获取的到，需要通过source 来执行，替代sh。 
+
+![showname.sh 在子程序当中运作的示意图](https://tva1.sinaimg.cn/large/007S8ZIlgy1gj1suat82hg309k02pa9v.gif)
+
+**其实语法学习，对比学习了那么多的编程语言，无法就那么几个基本的点：**
+
+变量定义、条件判断语句、循环语句、函数功能、其他特色语法，这些点掌握了也就掌握了shell 脚本的基本语法了，也就会写相应的脚本了。
+
+## 判断语句
+
+对于一个系统而言，它有很多的判断语句，不光像单独一些编程语言仅仅针对数字、逻辑判断，还有其他比如判断文件，文件夹，文件权限等等，下面就列举一些常用的判断语句：
+
+
+
+想要测试一下该文件名是啥玩意儿时，还有哪些标志可以来判断的呢？呵呵！有底下这些东西喔！
+
+注意点：使用下面这些表达式，如果需要参数的
+
+| 测试的标志                                                   | 代表意义                                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 1. 关于某个文件名的『文件类型』判断，如test -e filename 表示存在否 |                                                              |
+| -e                                                           | ==该『文件名』是否存在？(常用)==                             |
+| -f                                                           | **该『文件名』是否存在且为文件(file)？(常用)**               |
+| -d                                                           | **该『文件名』是否存在且为目录(directory)？(常用)**          |
+| -b                                                           | 该『文件名』是否存在且为一个block device 装置？              |
+| -c                                                           | 该『文件名』是否存在且为一个character device 装置？          |
+| -S                                                           | 该『文件名』是否存在且为一个Socket 文件？                    |
+| -p                                                           | 该『文件名』是否存在且为一个FIFO (pipe) 文件？               |
+| -L                                                           | 该『文件名』是否存在且为一个连结档？                         |
+| 2. 关于文件的权限检测，如test -r filename 表示可读否(但root 权限常有例外) |                                                              |
+| -r                                                           | 检测该文件名是否存在且具有『可读』的权限？                   |
+| -w                                                           | 检测该文件名是否存在且具有『可写』的权限？                   |
+| -x                                                           | 检测该文件名是否存在且具有『可执行』的权限？                 |
+| -u                                                           | 检测该文件名是否存在且具有『SUID』的属性？                   |
+| -g                                                           | 检测该文件名是否存在且具有『SGID』的属性？                   |
+| -k                                                           | 检测该文件名是否存在且具有『Sticky bit』的属性？             |
+| -s                                                           | 检测该文件名是否存在且为『非空白文件』？                     |
+| 3. 两个文件之间的比较，如： test file1 -nt file2             |                                                              |
+| -nt                                                          | (newer than)判断file1 是否比file2 新                         |
+| -ot                                                          | (older than)判断file1 是否比file2 旧                         |
+| -ef                                                          | 判断file1 与file2 是否为同一文件，可用在判断hard link 的判定上。主要意义在判定，两个文件是否均指向同一个inode 哩！ |
+| 4. 关于两个整数之间的判定，例如test n1 -eq n2                |                                                              |
+| -eq                                                          | 两数值相等(equal)                                            |
+| -ne                                                          | 两数值不等(not equal)                                        |
+| -gt                                                          | n1 大于n2 (greater than)                                     |
+| -lt                                                          | n1 小于n2 (less than)                                        |
+| -ge                                                          | n1 大于等于n2 (greater than or equal)                        |
+| -le                                                          | n1 小于等于n2 (less than or equal)                           |
+| 5. 判定字符串的资料 **==str1 和 str2 与符号之间不能有空格，否则会有错误==** |                                                              |
+| test -z string                                               | 判定字串是否为0 ？若string 为空字串，则为true                |
+| test -n string                                               | 判定字串是否非为0 ？若string为空字串，则为false。 注： -n亦可省略 |
+| test str1 == str2                                            | 判定str1 是否等于str2 ，若相等，则回传true                   |
+| test str1 != str2                                            | 判定str1 是否不等于str2 ，若相等，则回传false                |
+| 6. 多重条件判定，例如： test -r filename -a -x filename      |                                                              |
+| -a                                                           | (and)两状况同时成立！例如test -r file -a -x file，则file 同时具有r 与 x 权限时，才回传true。 |
+| -o                                                           | (or)两状况任何一个成立！例如test -r file -o -x file，则file 具有r 或 x 权限时，就可回传true。 |
+| !                                                            | 反相状态，如test ! -x file ，当file 不具有x 时，回传true     |
+
+![image-20200924170927154](https://tva1.sinaimg.cn/large/007S8ZIlgy1gj1us2oo84j30xw03wgm2.jpg)
+
+还有其他的测试点都是可以用的。
+
+#### [] 中括号判断式子
+
+```
+
+//看变量是否为空
+shijianhua@sjh-MacPro bash % [ -z "${HOME}" ] ; echo $?
+1
+
+```
+
+==上面说的判断语句用于脚本中，每个【】 中的每个运算符之间都要有空格；但是直接去运行好像又不要有空格，比如 ==  、!= 这种字符串判断，反正对这两个特别注意就行了。==
+
+```
+if [ 'a' == '1' ] ; then # 这里有空格，否则会错误；即在脚本中就留空格
+	echo "true"
+else 
+	echo "false"
+fi
+```
+
+
+
+中括号的语法注意点：
+
+- 在中括号[] 内的每个元件都需要有空白键来分隔；
+- 在中括号内的变数，最好都以双引号括号起来；
+- 在中括号内的常数，最好都以单或双引号括号起来。
+
+#### 变量功能
+
+```
+//代码
+echo "The script name is ==> ${0}"
+echo "Total parameter number is ==> $#"
+[ "$#" -lt 2 ] && echo "The number of parameter is less than 2. Stop here." && exit 0
+echo "Your whole parameter is ==> '$@'"
+echo "The 1st parameter ==> ${1}"
+echo "The 2nd parameter ==> ${2}"
+
+//输出
+shijianhua@sjh-MacPro bash % sh shell_variable.sh one two three four
+The script name is ==> shell_variable.sh
+Total parameter number is ==> 4
+Your whole parameter is ==> 'one two three four'
+The 1st parameter ==> one
+The 2nd parameter ==> two
+shijianhua@sjh-MacPro bash %
+
+```
+
+变量的功能就是我们在执行脚本程序的时候，可以带一些参数，比如上面的代码 `sh shell_variable.sh one two three four` 带了四个参数 one two three four ，这就是变量的功能，下面我们来学习一下。
+
+这个语法是这样的：
+
+```
+/path/to/scriptname opt1 opt2 opt3 opt4 
+          $0 $1 $2 $3 $4
+```
+
+这个scrpitname 就是变量$0 , 也就是文件名称，其他的参数我们可以自己接上，每个参数空格隔开即可。
+
+- $# ：代表后接的参数『个数』，以上表为例这里显示为『 4 』；
+- "\$@" ：代表所有的参数（除开$0 ）, 这里就是 one two three four ；
+- "\$*" ：\*代表  1 、2 、3 ...  那表示第一个参数、第二个参数、第三个参数，依次类推。
+
+
+
+**shift 变量偏移**
+
+上面的程序，最后面添加三行代码为
+
+```
+shift
+echo "total params ==> '$#'"
+echo "display params ==> '$@'"
+
+运行代码为：shijianhua@sjh-MacPro bash % sh shell_variable.sh one two three four
+输出为：
+The script name is ==> shell_variable.sh
+Total parameter number is ==> 4
+Your whole parameter is ==> 'one two three four'
+The 1st parameter ==> one
+The 2nd parameter ==> two
+total params ==> '3'
+display params ==> 'two three four'
+shijianhua@sjh-MacPro bash %
+```
+
+shift会移动变量，而且shift后面可以接数字，代表拿掉最前面的几个参数的意思。其实这就是一个语法而已。
+
+## 条件语句if then
+
+这东西说白了，就是其他编程语言的if - else 罢了。这是在shell 用if -then ，好好研究一下吧。
+
+我们前面看了 && || 可以执行正确和错误的语句。但他们的缺点是只能执行单一的语句，假如正确的情况要执行很多的语句，该如何是好呢？
+
+所以就要用到if -then 来实现了。
+
+**单层、简单条件判断式**
+
+只有一个单层的逻辑：
+
+```
+if [条件判断式]; then
+	当条件判断式成立时，可以进行的指令工作内容；
+fi    <==将if反过来写，就成为fi啦！结束if之意！
+```
+
+当我们的中括号里面的条件判断式子有多个判断条件时，可以使用
+
+- && 代表AND ；
+- || 代表or ；
+
+进行代替。
+
+[ "\${yn}" == "Y" -o "\${yn}" == "y" ] 可替换为 [ "​\${yn}" == "Y" ] || [ "${ yn}" == "y" ]  (yn 为变量。)
+
+
+
+**多重、复杂条件判断式**
+
+```
+#一个条件判断，分成功进行与失败进行(else) 
+if [条件判断式]; then
+	当条件判断式成立时，可以进行的指令工作内容；
+else
+	当条件判断式不成立时，可以进行的指令工作内容；
+fi
+```
+
+如果考虑更复杂的情况，则可以使用这个语法：
+
+```
+#多个条件判断(if ... elif ... elif ... else)分多种不同情况执行
+if [条件判断式一]; then
+	当条件判断式一成立时，可以进行的指令工作内容；
+elif [条件判断式二]; then
+	当条件判断式二成立时，可以进行的指令工作内容；
+else
+	当条件判断式一与二均不成立时，可以进行的指令工作内容；
+fi
+```
+
+然后总结一下，就是 这样的结构
+
+```
+if [判断语句] ;then
+		相关逻辑
+elif 【判断语句2】;then
+   相关逻辑
+elif 【判断语句3】;then
+....
+// 这里可以有0 到n 个elif 语句；
+else 
+   相关逻辑
+// 这里的else 也可以不要   
+fi   
+```
+
+## Case  
+
+对比java 的 switch-case ，不过其语法是：
+
+```
+case $变数名称in    <==关键字为case ，还有变数前有钱字号 
+  "第一个变数内容" )    <==每个变数内容建议用双引号括起来，关键字则为小括号)
+	程式段
+	;;             <==每个类别结尾使用两个连续的分号来处理！
+  "第二个变数内容" )
+	程式段
+	;; 
+  * )                   <==最后一个变数内容都会用*来代表所有其他值
+	不包含第一个变数内容与第二个变数内容的其他程式执行段
+	exit 1
+	;; 
+esac                   <==最终的case结尾！『反过来写』思考一下！
+```
+
+案例：
+
+```
+
+a=2
+echo "a的值${a}"
+case ${a} in
+	2 )
+	echo "2 case"
+	;;
+	"'1'" )
+	echo "1 case"
+	;;
+	*)
+	echo "特殊的值"
+	;;
+esac 
+
+```
+
+一般来说，使用『 case $变数in 』这个语法中，当中的那个『 $变数』大致有两种取得的方式：
+
+- **直接下达式**：例如上面提到的，利用『 script.sh variable 』的方式来直接给予$1这个变数的内容，这也是在/etc/init.d目录下大多数程式的设计方式。
+- **互动式**：透过read这个指令来让使用者输入变数的内容。
+
+```
+echo "This program will print your selection !"
+# read -p "Input your choice: " choice    #暂时取消，可以替换！
+# case ${choice} in                       #暂时取消，可以替换！
+case ${1} in                              #现在使用，可以用上面两行替换！ 可以用case ${choice} in 这样就是
+用输入的变量替代。
+  "one")
+	echo "Your choice is ONE"
+	;;
+  "two")
+	echo "Your choice is TWO"
+	;;
+  "three")
+	echo "Your choice is THREE"
+	;;
+  *)
+	echo "Usage ${0} {one|two|three}"
+	;;
+esac
+```
+
+
+
+## while 循环
+
+我们知道java的while 循环有两种，一种是do——while ，一种 while ，两种用法，对应shell 也是的，不过是
+
+一般来说，不定循环最常见的就是底下这两种状态了：
+
+```
+while [ condition ]   <==中括号内的状态就是判断表达式 
+do             <==do是循环的开始！
+	程式段落
+done           <==done是循环的结束
+
+```
+
+while的中文是『当....时』，所以，这种方式说的是『当condition条件成立时，就进行循环，直到condition的条件不成立才停止』的意思。
+
+还有另外一种不定循环的方式：
+
+```
+until [ condition ]
+do
+	程式段落
+done 
+```
+
+这种方式恰恰与while相反，它说的是『当condition条件成立时，就终止循环，否则就持续进行循环的程式段。』是否刚好相反啊～我们以while来做个简单的练习好了。
+
+Q：假设我要让使用者输入yes或者是YES才结束程式的执行，否则就一直进行告知使用者输入字串。
+
+```
+while [ "${yn}" != "yes" -a "${yn}" != "YES" ]; do
+	#statements
+	read -p "请输入yes或者YES:" yn
+done
+echo "OK! you input the correct answer."
+//注意 [ "${yn}" != "yes" -a "${yn}" != "YES" ] 这里面的表达式要有空格
+```
+
+
+
+## for 循环
+
+for循环也可以对比java，在java中有一个for循环，一个常规的for循环（比如遍历list等等）
+
+### 增加for循环
+
+```
+for var in con1 con2 con3 ... (就是一个集合)
+do
+	程式段
+done
+# 例子
+users=$(cut -d ':' -f1 /etc/passwd)     #截取帐号名称  users 就是一个集合
+for username in ${users}                #开始循环进行！
+do
+        id ${username}
+done
+```
+
+
+
+### 常规的for循环
+
+```
+for ((初始值;限制值;执行步阶))
+do
+	程式段
+done
+```
+
+- 初始值：某个变数在回圈当中的起始值，直接以类似i=1 设定好；
+- 限制值：当变数的值在这个限制值的范围内，就继续进行回圈。例如i<=100；
+- 执行步阶：每作一次回圈时，变数的变化量。例如i=i+1。
+
+比如：求从1到你输入的自然数的和：
+
+```
+read -p "Please input a number, I will count for 1+2+...+your_input: " nu
+
+s=0
+for (( i=1; i<=${nu}; i=i+1 ))
+do
+	s=$((${s}+${i}))
+done
+echo "The result of '1+2+3+...+${nu}' is ==> ${s}"
+```
+
+> 除了使用\$(seq 1 100) 之外，你也可以直接使用bash 的内建机制来处理喔！可以使用{1..100} 来取代$(seq 1 100) ！那个大括号内的前面/后面用两个字元，中间以两个小数点来代表连续出现的意思！例如要持续输出a, b, c...g 的话， 就可以使用『 echo {a..g} 』这样的表示方式！
+
+## 函数function
+
+函数的作用就是封装，其定义如下：
+
+```
+function fname () {
+	程式段
+}
+```
+
+**function的定义一定要在脚本的最前面**，因为shell script的执行方式是由上而下，由左而右，否则会找不到相应的函数。这个函数和脚本一样，没有参数，可以默认传参数，像脚本那样。然后可以有返回值。
+
+### 返回值的函数
+
+参考资料：https://www.runoob.com/linux/linux-shell-func.html 
+
+```
+function method(){
+	c=$((1+3))
+	return ${c}
+}
+
+method  # 执行函数
+res1=$? # 获取函数结果
+echo "res1的值${res1}" # 使用结果
+————————————————————————————————
+运行之后的结果
+res1的值4
+```
+
+### 函数参数
+
+```
+funWithParam(){
+    echo "第一个参数为 $1 !"
+    echo "第二个参数为 $2 !"
+    echo "第十个参数为 $10 !"
+    echo "第十个参数为 ${10} !"
+    echo "第十一个参数为 ${11} !"
+    echo "参数总数有 $# 个!"
+    echo "作为一个字符串输出所有参数 $* !"
+}
+
+```
+
+运行之后输出：`funWithParam 1 2 3 4 5 6 7 8 9 34 73`
+
+```
+第一个参数为 1 !
+第二个参数为 2 !
+第十个参数为 10 !
+第十个参数为 34 !
+第十一个参数为 73 !
+参数总数有 11 个!
+作为一个字符串输出所有参数 1 2 3 4 5 6 7 8 9 34 73 !
+```
+
+在Shell中，调用函数时可以向其传递参数。在函数体内部，通过 \$n 的形式来获取参数的值，例如，​\$1表示第一个参数，​\$2表示第二个参数...​\$10 不能获取第十个参数，获取第十个参数需要\${10}。当n>=10时，需要使用\${n}来获取参数。
+
+> 这一点和脚本参数一样，这也是shell 脚本不同于其他的编程语言。
+
+## debug
+
+这里的debug 和java不一样，他没有那种断电调试，只是一些命令行辅助我们编码；
+
+```
+[dmtsai@study ~]$ sh [-nvx] scripts.sh 
+选项与参数：
+-n ：不要执行script，仅查询语法的问题；
+-v ：再执行sccript 前，先将scripts 的内容输出到萤幕上；
+-x ：将使用到的script 内容显示到萤幕上，这是很有用的参数！
+```

@@ -1,7 +1,3 @@
-
-
-
-
 [TOC]
 
 ## 设计思想
@@ -220,7 +216,9 @@ git remote add origin  git@github.com:xiaohuajian/test.git
 >
 > 远程仓库名字 “origin” 与分支名字 “master” 一样，在 Git 中并没有任何特别的含义一样。 同时 “master” 是当你运行 `git init` 时默认的起始分支名字，原因仅仅是它的广泛使用， “origin” 是当你运行 `git clone` 时默认的远程仓库名字。 如果你运行 `git clone -o booyah`，那么你默认的远程分支名字将会是 `booyah/master`。
 
-#### 推送push
+### 推送push
+
+
 
 `git push origin localBranchName[:rometeBrachName]`
 
@@ -239,7 +237,15 @@ eg: git push origin v1  // 把分支v1 推送到origin仓库里
 
  你也可以运行 `git push origin v1:v1Fix`，它会做同样的事——也就是说“推送本地的 `v1` 分支，将其作为远程仓库的 `v1Fix` 分支” ==可以通过这种格式来推送本地分支到一个命名不相同的远程分支。==
 
-#### 拉取
+当我们用androidStudio 的时候,如果项目是多仓库时,需要我们去配置才会在仓库分支列表显示我们的多个分支, 我们推送时需要把每个分支都调到对应的分支,这样才行.不过,应该可以通过命令行去实现推送,可以研究一下,但是应该麻烦.  如果添加之后,不生效则重启一下as. 
+
+![image-20201016103145918](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqyx2n7aaj31bt0u0n61.jpg)
+
+![image-20201016103318878](https://tva1.sinaimg.cn/large/007S8ZIlgy1gjqyyoji25j31zo0hc465.jpg)
+
+
+
+### 拉取
 
 当 `git fetch` 命令从服务器上抓取本地没有的数据时，它并不会修改工作目录中的内容。 它只会获取数据然后让你自己合并。要明白一点就是 fetch 是把服务器数据同步到本地，但是没有合并；也可以理解为fetch针对到是仓库 remote 而言，把仓库里所有的和本地不同的数据同步下来，然后你自己根据需要自己去 合并这个仓库中的远程分支到本地分支， 运行`git merge remote/branchName` 意思是合并remote仓库里的branchName分支到当前分支。
 
@@ -259,9 +265,9 @@ Git fetch origin develop  把远程develop分支先抓取 (这里只fetch 了某
 git merge origin/develop  把远程develop 进行本地分支合并
 ```
 
-##### 
 
-#### 跟踪分支
+
+### 跟踪分支
 
 从一个远程跟踪分支检出一个本地分支会自动创建所谓的“跟踪分支”（它跟踪的分支叫做“上游分支”）。 跟踪分支是与远程分支有直接关系的本地分支。 **说白了就是服务器分支的本地映射**，那么什么操作会创建跟踪分支？
 
@@ -306,7 +312,7 @@ $ git branch -vv
 
 
 
-#### 删除分支
+### 删除分支
 
 **1. 删除远程分支**
 
