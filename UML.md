@@ -22,10 +22,19 @@ uml 是一种对软件进行描述、规约、建模的语言，有如下特点�
 #### 关系
 uml 关系可以分为四种：
 
- - 依赖 ：类之间的使用关系；常常是主谓关系，就是一个bean 执行了某个动作aciton，形成了一个主谓关系，这种情况就是很常见，比如人吃饭，人是一个类，饭是一个类，那人和饭之间的关系就是一个依赖关系；符号为：----- + 箭头 
-- 关联 ：对象之间的结构关系；比如聚合、组合，描述整体和部分的关系；常常用于实体类之间的描述；书和图书馆就是聚合关系或者组合关系，很多书组成了图书馆；还有播放窗口和播放界面，一个播放界面window可能有一个或多个窗口cell组成；其符合为：（实体线）—— + 实心菱形；
-- 泛化（继承extend）：按照java的类的概念就好理解了，其符号为 —— + 向右的三角形 ▲
-- 实现（implement）:  按照java 类的概念理解，其符号为 ---- + 向右的三角形 ▲
+ - 依赖 ：类之间的使用关系；常常是主谓关系，就是一个bean 执行了某个动作aciton，形成了一个主谓关系，这种情况就是很常见，比如人吃饭，人是一个类，饭是一个类，那人和饭之间的关系就是一个依赖关系；符号为：
+
+    aticon  <img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk9jwozofyj30ig00ot8k.jpg" alt="image-20201101121809544" style="zoom:33%;" /> bean
+
+   <img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk9kcbqdbgj31420u01ky.jpg" alt="IMG_5711" style="zoom:67%;" />
+
+- 关联 ：对象之间的结构关系；比如聚合、组合，描述整体和部分的关系；常常用于实体类之间的描述；书和图书馆就是聚合关系或者组合关系，很多书组成了图书馆；还有播放窗口和播放界面，一个播放界面window可能有一个或多个窗口cell组成；其符合为：
+
+  整体（Library）<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk9jtnr5r2j306k00iq2r.jpg" alt="image-20201101121514969" style="zoom: 50%;" />部分（Book）
+
+- 泛化（继承extend）：按照java的类的概念就好理解了，其符号为 subClass <img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk9jxh1e5dj30aa00imx0.jpg" alt="image-20201101121854568" style="zoom:33%;" /> fatherClass
+
+- 实现（implement）:  按照java 类的概念理解，其符号为  class   <img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gk9jz2hdruj30ig00o0sl.jpg" alt="image-20201101122026888" style="zoom:33%;" /> Interface
 
 #### 模型图
 模型图就是我们重点要说的部分，模型图分为结构图和行为图: 
@@ -58,30 +67,67 @@ student 为参与者 actor ，相应的功能有 login 、query course/personal 
 ## 类图
 类图就是描述系统中各个类之间的关系，也属于结构图。但是做过开发就知道类的设计及关系非常之重要，它隐含了软件的架构设计、开发思想、实现思路。常常在开发时遇到某一个重大的功能，都需要设计文档，而类的设计文档又是非常重要的一个，直接体现你的架构水平和认知水平。
 
+类图是描述类、协作（类或对象间协作）、接口及其关系的图。展现各个类的**静态结构**图。
+
 ### 组成元素
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200406210441589.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NqaF8zODk1MTA1MDY=,size_16,color_FFFFFF,t_70)
 图中 为student 类的全面元素：包含 类名、属性、操作；
 
-- 类名 ： 通常名词单数形式，第一个字母大写；在矩形框第一个框内，必须要有
-- 属性：矩形框内第二个元素，如userName、password 等等，表示一个类的属性，可以更加不同的类去抽象出来的相关特征；在描述属性时，还有其类型，是基本类型 int 、float 等，还是其他对象类型；另外还有可见性 - 表示私有自己可见。
--  操作：对象的一组行为操作，即方法或函数，比如 login 、query ；放在第三栏，其行为操作也有可见性和返回值；
+#### 类名 
+
+通常名词单数形式，第一个字母大写；在矩形框第一个框内，必须要有。
+
+#### 属性
+
+矩形框内第二个元素，如userName、password 等等，表示一个类的属性，可以更加不同的类去抽象出来的相关特征；在描述属性时，还有其类型，是基本类型 int 、float 等，还是其他对象类型；另外还有可见性 - 表示私有自己可见。
+
+属性的语法定义：
+
+![image-20201101153707882](https://tva1.sinaimg.cn/large/0081Kckwgy1gk9pnv89o3j31x60ishdu.jpg)
+
+
+
+#### 操作（方法）
+
+对象的一组行为操作，即方法或函数，比如 login 、query ；放在第三栏，其行为操作也有可见性和返回值；
+
+![image-20201101153844812](https://tva1.sinaimg.cn/large/0081Kckwgy1gk9ppegk88j31x20f41ky.jpg)
+
+visibility ：可见性
+
+name ：方法名
+
+Parameter ： 参数名
+
+Type ：返回类型
+
+Propterty：「readOnly」只读；unique 唯一取值 ordered：固定顺序
+
+
 
 #### 可见性符号
-|  符号|名称  | 含义
+
+|  符号|名称  | 含义|
 |--|--|--|
 | + | public  | 所有可见 |
 | -| private| 仅自己可见|
 | # | protect| 自己和之类可见 |
 | ~| package|  包可见|
 
+
+
 #### 类关系
+
 类的关系就是前面讲到的关系，完全适用
 
 示意图 ： 以学生选课系统为例
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200406211836652.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NqaF8zODk1MTA1MDY=,size_16,color_FFFFFF,t_70)
 
+![IMG_5712](https://tva1.sinaimg.cn/large/0081Kckwgy1gk9khedfrvj30u01401kz.jpg)
+
 ##  包图
+
 包图就是描述系统中各个包之间的关系。当我们的软件越来越复杂，功能越来越复杂，我们需要合理的设计包结构，使得便于交流和扩展。一般的，我们把逻辑相同的类放在同一个包，具有高内聚、低耦合的特点。和类图非常相似，只不过二者在描述层次上不一样罢了，一个描述类，一个在高抽象层次上描述包；类图是针对某一个点进行描述，包图针对一个模块、系统进行描述；视角不一样，仅此而已。
 
 示意图

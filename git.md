@@ -1,5 +1,7 @@
 [TOC]
 
+# 概述
+
 ## 设计思想
 
 版本管理工具最主要的功能就是高效的管理各个版本（分支），那git 是如何做到高效的管理的呢？其分支的设计思想是什么？
@@ -7,6 +9,8 @@
 git的设计思想就是通过记录每个版本和上一个版本之间的差异，把这个差异作为一个节点，第一次的提交为根节点，然后每次提交都会形成一个节点，这样循环往复就会形成一颗树，这棵树的形状就是该工程的提交全部记录。说明了，**git的核心就是记录差异 diff ；而其他的集中式的版本管理 svn 是记录快照**，每次提交都是通过记录所有文件的快照，然后通过比对快照然后记录每个文件的历史，差异。由于比较差异和记录快照这两种思想，在创建分支的时候，速度可以说差异巨大，因为在创建分支的时候本质上没有差异，但记录快照则需要把所有的文件都记录一遍，所以其耗时差异巨大，git几乎瞬间完成，svn 要花费很久根据项目的大小而论。
 
 
+
+# 基本
 
 ## 分支操作
 
@@ -72,7 +76,7 @@ $ git checkout iss53
 
 解决完刚刚的bug，把iss53分支合并到主master分支上，用git merge 命令去执行。注意：说到合并，有两方参与，A 合并到 B 与 B 合并到 A ，是不一样的。A 合并到 B ，即把A 的代码拿来融合到 B ，过程结束之后，A 的内容没有改变， B的内容改变了 。对照上面，这时候，我的当前分支应该在 master 分支，把 iss53 分支的代码拿过来合并到master，结束之后，我的工作分支仍是 master 且master分支内容包含之前的master分支加 iss53 分支的内容。而 iss53分支的内容没有改变。
 
-![一次典型合并中所用到的三个快照。](https://tva1.sinaimg.cn/large/007S8ZIlgy1ghja37ok2yj30m80aljrf.jpg)![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
+![一次典型合并中所用到的三个快照](https://tva1.sinaimg.cn/large/007S8ZIlgy1ghja37ok2yj30m80aljrf.jpg)![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
 
 merge 合并其实是结果合并，Git 会使用两个分支的末端所指的快照（`C4` 和 `C5`）以及这两个分支的工作祖先（`C2`），做一个简单的三方合并。Git 将此次三方合并的结果做了一个合并自动创建一个新的提交指向它。 Git 会自行决定选取哪一个提交作为最优的共同祖先，并以此作为合并的基础；
 
@@ -342,138 +346,6 @@ git branch -d【D】 branchName
 
 
 
-## stash 贮存
-
-会处理工作目录的脏的状态——即跟踪文件的修改与暂存的改动——然后将未完成的修改保存到一个栈上， 而你可以在任何时候重新应用这些改动（甚至在不同的分支上）。
-
-> 运用场景：当你在项目的一部分上已经工作一段时间后，所有东西都进入了混乱的状态， 而这时你想要切换到另一个分支做一点别的事情。 问题是，你不想仅仅因为过会儿回到这一点而为做了一半的工作创建一次提交。 针对这个问题的答案是 `git stash` 命令
-
-常用的命令：
-
-- git stash ：贮藏修改，让当前工作目录是干净的；
-
-- git stash list ：查看当前缓存的集合；
-
-  ```console
-  $ git stash list
-  stash@{0}: WIP on master: 049d078 added the index file
-  stash@{1}: WIP on master: c264051 Revert "added file_size"
-  stash@{2}: WIP on master: 21d80a5 added number to log
-  ```
-
-- git stash apply/pop 【stash@{2}】 ：指定某个贮藏到当前工作区; 如果不指定一个贮藏，Git 认为指定的是最近的贮藏 （apply 是运用之后还会在贮藏堆栈种保留这个索引，pop 会丢弃）
-
-- git stash drop 【stash@{2}】：移除的贮藏的名字来移除堆栈中的索引；
-
-- git stash clear ： 清除所有的贮藏历史
-
-
-
-## 重置揭秘
-
-当我们在开发时，想回到某个提交版本，或者说我们想丢弃工作区的所有改动，回到上一次的提交。这时就要用到重置功能reset 和checkout。
-
-### 三棵树
-
-理解 `reset` 和 `checkout` 的最简方法，就是以 Git 的思维框架（将其作为内容管理器）来管理三棵不同的树（文件集合）
-
-Git 作为一个系统，是以它的一般操作来管理并操纵这三棵树的：
-
-| 树                | 用途                                 |
-| :---------------- | :----------------------------------- |
-| HEAD              | 上一次提交的快照，下一次提交的父结点 |
-| Index             | 预期的下一次提交的快照               |
-| Working Directory | 沙盒                                 |
-
-#### HEAD
-
-HEAD 是当前分支引用的指针，它总是指向该分支上的最后一次提交。这表示 HEAD 将是下一次提交的父结点。 通常，理解 HEAD 的最简方式，就是将它看做 **该分支上的最后一次提交** 的快照。
-
-#### Index 索引
-
-索引是你的 **预期的下一次提交**。 我们也会将这个概念引用为 Git 的“暂存区”
-
-#### 工作目录
-
- 你可以把工作目录当做 **沙盒**。在你将修改提交到暂存区并记录到历史之前，可以随意更改
-
-#### 工作流程
-
-![reset-workflow](https://git-scm.com/book/en/v2/images/reset-workflow.png)
-
-#### reset \checkout 
-
-reset \checkout 命令会操作这三颗树，工作区文件经过add ，就到了暂存区index，暂存区文件经过commit 就会到HEAD ，形成一个指针记录。由于我们利用第三方集成工具，一般都是直接提交，工具会帮助我们 一次性把add 和commit 操作都做掉，所以也不存在说考虑 已经add 但没有commit 的情况，直接就引用 **-- hard** 参数即可。 
-
-`git reset --hard HEAD`  回到上一次commit 后的代码；
-
-`git reset --hard commitId`  回到commitId 提交时候后的代码；
-
-我们可以这样去针对不同的场景做一些事情，比如我们的代码比较乱，想重新开发，直接就回到最近一次的情况直接运行 `git reset --hard HEAD`；我记得有一次git 拉代码时，卡死了，重启电脑，之前的代码都没了，但是有记录，就直接运行 `git reset --hard HEAD` 回到最近，一下就解决了。
-
-`git checkout banchName `  git 会先检查当前工作区是否有内容变动，如有该命令就执行不成功，需要我们先处理改动. 这时候我们可以commit 该内容，或者丢弃改动，运行 
-
-`git checkout  branchName -- fileName(带路径)` 
-
->  git checkout feature/optimizeCode  --   /Users/shijianhua/Documents/androidProject/haduCompany/ktakilat/app/src/main/java/com/pendanaan/kta/ui/fragment/amortize/AmortizeBillFragment.java
-
-这时候就会丢弃该文件的修改；
-
-上面提到了checkout 的对提交commit 及 file 两个层面的，显然reset 也有两个，之前介绍的reset是对commit ，对file 层面语法如下：`git reset fileName(带路径)` ；其实reset 对file层面就是**取消暂存文件**，我们知道对一个file 要提交先经过add ，在commit ；如果一个file add 之后，我们想恢复之前的状态，可以运行reset 命令，但是我们经常用工具androidStudio，一般的工具会把这两个命令合二为一，这时候reset 对单独的file 其实没啥意义了。
-
-> **reset 会把当前分支的对应提交id 移到指定的branch 分支的对应提交，并且HEAD指针也会跟着移动；而checkout 不会，但是HEAD 指针会改变其指向，变为目的分支的对应提交。**
-
-上面的所说的就是其根本，要明白这两个根本区别就好了。
-
-![reset和checkout](https://www.git-scm.com/book/en/v2/images/reset-checkout.png)
-
-## 变基 rebase
-
-### 示例说明
-
-
-
-​	![](https://www.git-scm.com/book/en/v2/images/interesting-rebase-3.png)
-
-在 `master` 分支上 接下来你决定将 `server` 分支中的修改整合进来。
-
-`git rebase <baseBranch>  <topicBranch>`  将分支server变基到master 上，运行命令：
-
-```
-git rebase master server
-```
-
-![变基后](https://www.git-scm.com/book/en/v2/images/interesting-rebase-4.png)
-
-将 `server` 中的修改变基到 `master` 上，然后就可以快进合并主分支 `master` 了。
-
-```console
-$ git checkout master （执行上面的命令后，会切换到server 分支上，所以要切换回来）
-$ git merge server 【-m ‘注释信息’】
-```
-
-后面就可以删掉server 分支了。最后为
-
-![合并后分支](https://git-scm.com/book/en/v2/images/interesting-rebase-5.png)
-
-注意这时候master 和 server 都在c10‘ ，而不是在c9’ 。
-
-> 思路是首先找到这两个分支（即当前分支 `server`、变基操作的目标基底分支 `master`） 的最近共同祖先 `C2`，然后对比当前分支相对于该祖先的历次提交，提取相应的修改并存为临时文件， 然后将当前分支指向目标基底 `C3`, 最后以此将之前另存为临时文件的修改依序应用
-
-使用变基的注意事项：**如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。**
-
-假如说有的代码存在你想要变基的分支，你最好只控制自己的代码，而不是帮别人管理分支。因为别人想的和你并不一样。上面的那就话就是这个意思。
-
-### 变基 vs. 合并
-
-至此，你已在实战中学习了变基和合并的用法，你一定会想问，到底哪种方式更好。 在回答这个问题之前，让我们退后一步，想讨论一下提交历史到底意味着什么。
-
-有一种观点认为，仓库的提交历史即是 **记录实际发生过什么**。 它是针对历史的文档，本身就有价值，不能乱改。 从这个角度看来，改变提交历史是一种亵渎，你使用 *谎言* 掩盖了实际发生过的事情。 如果由合并产生的提交历史是一团糟怎么办？ 既然事实就是如此，那么这些痕迹就应该被保留下来，让后人能够查阅。
-
-另一种观点则正好相反，他们认为提交历史是 **项目过程中发生的事**。 没人会出版一本书的第一版草稿，软件维护手册也是需要反复修订才能方便使用。 持这一观点的人会使用 `rebase` 及 `filter-branch` 等工具来编写故事，怎么方便后来的读者就怎么写。
-
-现在，让我们回到之前的问题上来，到底合并还是变基好？希望你能明白，这并没有一个简单的答案。 Git 是一个非常强大的工具，它允许你对提交历史做许多事情，但每个团队、每个项目对此的需求并不相同。 既然你已经分别学习了两者的用法，相信你能够根据实际情况作出明智的选择。
-
 ## 提交历史
 
 回顾下提交历史 `git log`命令完成。然后在这个命令上接一些参数，实现我们想要的功能，下面就列举出常用的命令参数。
@@ -647,4 +519,323 @@ https://android.googlesource.com/platform/frameworks/base/ 、https://source.and
 \3. 最后把id_rsa.pub 文件打开，把里面的字符串放到git 网站上面；
 
 
+
+# 协作
+
+
+
+# 高级
+
+## stash 贮存
+
+会处理工作目录的脏的状态——即跟踪文件的修改与暂存的改动——然后将未完成的修改保存到一个栈上， 而你可以在任何时候重新应用这些改动（甚至在不同的分支上）。
+
+> 运用场景：当你在项目的一部分上已经工作一段时间后，所有东西都进入了混乱的状态， 而这时你想要切换到另一个分支做一点别的事情。 问题是，你不想仅仅因为过会儿回到这一点而为做了一半的工作创建一次提交。 针对这个问题的答案是 `git stash` 命令
+
+常用的命令：
+
+- git stash ：贮藏修改，让当前工作目录是干净的；
+
+- git stash list ：查看当前缓存的集合；
+
+  ```console
+  $ git stash list
+  stash@{0}: WIP on master: 049d078 added the index file
+  stash@{1}: WIP on master: c264051 Revert "added file_size"
+  stash@{2}: WIP on master: 21d80a5 added number to log
+  ```
+
+- git stash apply/pop 【stash@{2}】 ：指定某个贮藏到当前工作区; 如果不指定一个贮藏，Git 认为指定的是最近的贮藏 （apply 是运用之后还会在贮藏堆栈种保留这个索引，pop 会丢弃）
+
+- git stash drop 【stash@{2}】：移除的贮藏的名字来移除堆栈中的索引；
+
+- git stash clear ： 清除所有的贮藏历史
+
+
+
+## 重置揭秘
+
+当我们在开发时，想回到某个提交版本，或者说我们想丢弃工作区的所有改动，回到上一次的提交。这时就要用到重置功能reset 和checkout。
+
+### 三棵树
+
+理解 `reset` 和 `checkout` 的最简方法，就是以 Git 的思维框架（将其作为内容管理器）来管理三棵不同的树（文件集合）
+
+Git 作为一个系统，是以它的一般操作来管理并操纵这三棵树的：
+
+| 树                | 用途                                 |
+| :---------------- | :----------------------------------- |
+| HEAD              | 上一次提交的快照，下一次提交的父结点 |
+| Index             | 预期的下一次提交的快照               |
+| Working Directory | 沙盒                                 |
+
+#### HEAD
+
+HEAD 是当前分支引用的指针，它总是指向该分支上的最后一次提交。这表示 HEAD 将是下一次提交的父结点。 通常，理解 HEAD 的最简方式，就是将它看做 **该分支上的最后一次提交** 的快照。
+
+#### Index 索引
+
+索引是你的 **预期的下一次提交**。 我们也会将这个概念引用为 Git 的“暂存区”
+
+#### 工作目录
+
+ 你可以把工作目录当做 **沙盒**。在你将修改提交到暂存区并记录到历史之前，可以随意更改
+
+#### 工作流程
+
+![reset-workflow](https://git-scm.com/book/en/v2/images/reset-workflow.png)
+
+#### reset \checkout 
+
+reset \checkout 命令会操作这三颗树，工作区文件经过add ，就到了暂存区index，暂存区文件经过commit 就会到HEAD ，形成一个指针记录。由于我们利用第三方集成工具，一般都是直接提交，工具会帮助我们 一次性把add 和commit 操作都做掉，所以也不存在说考虑 已经add 但没有commit 的情况，直接就引用 **-- hard** 参数即可。 
+
+`git reset --hard HEAD`  回到上一次commit 后的代码；
+
+`git reset --hard commitId`  回到commitId 提交时候后的代码；
+
+我们可以这样去针对不同的场景做一些事情，比如我们的代码比较乱，想重新开发，直接就回到最近一次的情况直接运行 `git reset --hard HEAD`；我记得有一次git 拉代码时，卡死了，重启电脑，之前的代码都没了，但是有记录，就直接运行 `git reset --hard HEAD` 回到最近，一下就解决了。
+
+`git checkout banchName `  git 会先检查当前工作区是否有内容变动，如有该命令就执行不成功，需要我们先处理改动. 这时候我们可以commit 该内容，或者丢弃改动，运行 
+
+`git checkout  branchName -- fileName(带路径)` 
+
+>  git checkout feature/optimizeCode  --   /Users/shijianhua/Documents/androidProject/haduCompany/ktakilat/app/src/main/java/com/pendanaan/kta/ui/fragment/amortize/AmortizeBillFragment.java
+
+这时候就会丢弃该文件的修改；
+
+上面提到了checkout 的对提交commit 及 file 两个层面的，显然reset 也有两个，之前介绍的reset是对commit ，对file 层面语法如下：`git reset fileName(带路径)` ；其实reset 对file层面就是**取消暂存文件**，我们知道对一个file 要提交先经过add ，在commit ；如果一个file add 之后，我们想恢复之前的状态，可以运行reset 命令，但是我们经常用工具androidStudio，一般的工具会把这两个命令合二为一，这时候reset 对单独的file 其实没啥意义了。
+
+> **reset 会把当前分支的对应提交id 移到指定的branch 分支的对应提交，并且HEAD指针也会跟着移动；而checkout 不会，但是HEAD 指针会改变其指向，变为目的分支的对应提交。**
+
+上面的所说的就是其根本，要明白这两个根本区别就好了。
+
+![reset和checkout](https://www.git-scm.com/book/en/v2/images/reset-checkout.png)
+
+## 变基 rebase
+
+### 示例说明
+
+
+
+​	![](https://www.git-scm.com/book/en/v2/images/interesting-rebase-3.png)
+
+在 `master` 分支上 接下来你决定将 `server` 分支中的修改整合进来。
+
+`git rebase <baseBranch>  <topicBranch>`  将分支server变基到master 上，运行命令：
+
+```
+git rebase master server
+```
+
+![变基后](https://www.git-scm.com/book/en/v2/images/interesting-rebase-4.png)
+
+将 `server` 中的修改变基到 `master` 上，然后就可以快进合并主分支 `master` 了。
+
+```console
+$ git checkout master （执行上面的命令后，会切换到server 分支上，所以要切换回来）
+$ git merge server 【-m ‘注释信息’】
+```
+
+后面就可以删掉server 分支了。最后为
+
+![合并后分支](https://git-scm.com/book/en/v2/images/interesting-rebase-5.png)
+
+注意这时候master 和 server 都在c10‘ ，而不是在c9’ 。
+
+> 思路是首先找到这两个分支（即当前分支 `server`、变基操作的目标基底分支 `master`） 的最近共同祖先 `C2`，然后对比当前分支相对于该祖先的历次提交，提取相应的修改并存为临时文件， 然后将当前分支指向目标基底 `C3`, 最后以此将之前另存为临时文件的修改依序应用
+
+使用变基的注意事项：**如果提交存在于你的仓库之外，而别人可能基于这些提交进行开发，那么不要执行变基。**
+
+假如说有的代码存在你想要变基的分支，你最好只控制自己的代码，而不是帮别人管理分支。因为别人想的和你并不一样。上面的那就话就是这个意思。
+
+### 变基 vs. 合并
+
+至此，你已在实战中学习了变基和合并的用法，你一定会想问，到底哪种方式更好。 在回答这个问题之前，让我们退后一步，想讨论一下提交历史到底意味着什么。
+
+有一种观点认为，仓库的提交历史即是 **记录实际发生过什么**。 它是针对历史的文档，本身就有价值，不能乱改。 从这个角度看来，改变提交历史是一种亵渎，你使用 *谎言* 掩盖了实际发生过的事情。 如果由合并产生的提交历史是一团糟怎么办？ 既然事实就是如此，那么这些痕迹就应该被保留下来，让后人能够查阅。
+
+另一种观点则正好相反，他们认为提交历史是 **项目过程中发生的事**。 没人会出版一本书的第一版草稿，软件维护手册也是需要反复修订才能方便使用。 持这一观点的人会使用 `rebase` 及 `filter-branch` 等工具来编写故事，怎么方便后来的读者就怎么写。
+
+现在，让我们回到之前的问题上来，到底合并还是变基好？希望你能明白，这并没有一个简单的答案。 Git 是一个非常强大的工具，它允许你对提交历史做许多事情，但每个团队、每个项目对此的需求并不相同。 既然你已经分别学习了两者的用法，相信你能够根据实际情况作出明智的选择。
+
+
+
+## 子模块submodule 
+
+场景 ：某个工作中的项目需要包含并使用另一个项目。 也许是第三方库，或者你独立开发的，用于多个父项目的库。 现在问题来了：你想要把它们当做两个独立的项目，同时又想在一个项目中使用另一个。该怎么办呢？
+
+可以通过子模块去解决这个问题。比如项目
+
+![image-20201102144507240](https://tva1.sinaimg.cn/large/0081Kckwgy1gkatryrp2nj31by0iuaec.jpg)
+
+![image-20201102155418175](https://tva1.sinaimg.cn/large/0081Kckwgy1gkavrwdq3oj30ps0enwgw.jpg)
+
+像这种方式管理代码的就是通过子模块形式实现的。这种方式好处很多，比如说项目采用的组件化开发，如果把每个组件作为一个module 放在同一个项目仓库中，那么这个组件修改之后很难同步到其他使用该组件的项目。导致组件维护、共享成本很高，还可能随着项目的逐渐演变，每个项目的组件最后都不一样了，失去了公用的基础。
+
+### 添加子模块
+
+子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。 它能让你将另一个仓库克隆到自己的项目中，同时还保持提交的独立。对应到项目中：一个被分成一个主项目与几个子项目的项目。
+
+将一个已存在的 Git 仓库添加为正在工作的仓库的子模块。 你可以通过在 `git submodule add` 命令后面加上想要跟踪的项目的相对或绝对 URL 来添加新的子模块
+
+```
+git submodule add submoduleURL
+eg: git submodule add https://github.com/chaconinc/DbConnector
+```
+
+当我们这样为某个项目添加子moudule 后，我们的工程中会多个 .gitmodules 文件，里面的东西记录如下：
+
+```
+[submodule "submodule/uml"]
+	path = submodule/uml
+	url = git@github.com:xiaohuajian/uml.git
+[submodule "biz-primary-homework-student"]
+	path = biz_primary_homework_student
+	url = https://xxxx/android/biz-primary-homework-student.git
+```
+
+这里有5个子module ，每个module 记录的东西有：
+
+**名称[submodule "submodule/uml"] **
+
+**路径 path = submodule/uml**
+
+**url url = git@github.com:xiaohuajian/uml.git**
+
+接着，我们还要把刚刚添加的东西push 到远程仓库。这时只需`git push` 即可。
+
+### 克隆含义子模块的项目
+
+如果直接运行 `git clone projetUrl` 你会发现有主项目的代码，默认也会包含该子模块目录，但其中还没有任何文件。想要把submodule 拉取下来，应该在执行：
+
+```
+git submodule init
+git submodule update
+这两个命令直接在主工程的目录下执行就行了
+```
+
+![image-20201102155903401](https://tva1.sinaimg.cn/large/0081Kckwgy1gkavwuc6dkj30v40gy0w6.jpg)
+
+
+
+还有更简单的方式来 `git clone --recurse-submodules projectUrl`
+
+```
+shijianhua@sjh-MacPro recurseSubmoudle % git clone --recurse-submodules git@github.com:xiaohuajian/test.git
+Cloning into 'test'...
+remote: Enumerating objects: 29, done.
+remote: Counting objects: 100% (29/29), done.
+remote: Compressing objects: 100% (22/22), done.
+remote: Total 113 (delta 3), reused 19 (delta 2), pack-reused 84
+Receiving objects: 100% (113/113), 276.91 KiB | 11.00 KiB/s, done.
+Resolving deltas: 100% (4/4), done.
+Submodule 'uml' (https://github.com/xiaohuajian/uml.git) registered for path 'uml'
+Cloning into '/Users/shijianhua/workspace/submoudleLearn/recurseSubmoudle/test/uml'...
+remote: Enumerating objects: 6, done.
+remote: Counting objects: 100% (6/6), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
+Submodule path 'uml': checked out '74bb7af4def83865b32228612aa07fd336ff0595'
+shijianhua@sjh-MacPro recurseSubmoudle %
+```
+
+如果你已经克隆了项目但忘记了 `--recurse-submodules`，那么可以运行 `git submodule update --init` 将 `git submodule init` 和 `git submodule update` 合并成一步。如果还要初始化、抓取并检出任何嵌套的子模块， 请使用简明的 `git submodule update --init --recursive`。
+
+### 在子项目工作
+
+目录工程
+
+![image-20201102163412432](https://tva1.sinaimg.cn/large/0081Kckwgy1gkawxf0wwuj30ue0kidjb.jpg)
+
+#### 从子模块的远端拉取上游修改
+
+想要在子模块中查看新工作，可以进入到目录中运行 `git fetch` 与 `git merge`，合并上游分支来更新本地代码。
+
+```
+shijianhua@sjh-MacPro uml % git fetch
+fatal: unable to access 'https://github.com/xiaohuajian/uml.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443
+shijianhua@sjh-MacPro uml % git fetch git@github.com:xiaohuajian/uml.git
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:xiaohuajian/uml
+ * branch            HEAD       -> FETCH_HEAD
+shijianhua@sjh-MacPro uml % git merge
+fatal: No current branch.
+shijianhua@sjh-MacPro uml % git merge origin/master
+Already up to date.
+shijianhua@sjh-MacPro uml %
+```
+
+==这里注意的是，运行命令的根目录要是子模块的目录 uml 。否则不会成功。==
+
+或者可以有替代方式。如果你不想在子目录中手动抓取与合并，那么还有种更容易的方式。 运行 `git submodule update --remote`，Git 将会进入子模块然后抓取并更新（Git 默认会尝试更新 **所有** 子模块）。
+
+```
+shijianhua@sjh-MacPro test % git submodule update --remote uml
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 6 (delta 1), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (6/6), done.
+From https://github.com/xiaohuajian/uml
+   e796b5f..25abfc1  master     -> origin/master
+Submodule path 'uml': checked out '25abfc1353e0ec5cf61d4118a2ad7ad2ff4f62d2'
+shijianhua@sjh-MacPro test %
+```
+
+==这里的命令运行目录为：主工程 test 文件目录。==
+
+#### 在子模块上工作
+
+就是你的工作目录是在某个module 中，比如uml submodule中。
+
+首先，让我们进入子模块目录然后检出一个分支。
+
+```
+$ cd uml/
+$ git checkout branch1 
+```
+
+然后尝试用 “merge” 选项来更新子模块。 为了手动指定它，我们只需给 `update` 添加 `--merge` 选项即可。 这时我们将会看到服务器上的这个子模块有一个改动并且它被合并了进来。
+
+```console
+$ cd ..
+$ git submodule update --remote --merge
+```
+
+
+
+### 子模的块技巧
+
+#### 子模块遍历
+
+有一个 `foreach` 子模块命令，它能在每一个子模块中运行任意命令。 如果项目中包含了大量子模块，这会非常有用。
+
+**创建新分支**
+
+我们想为多个子模块创建分支，然后并将所有子模块都切换过去
+
+```
+shijianhua@sjh-MacPro test % git submodule foreach 'git checkout -b feature1'
+Entering 'uml'
+Switched to a new branch 'feature1'
+shijianhua@sjh-MacPro test % git branch
+* master
+shijianhua@sjh-MacPro test % cd uml
+shijianhua@sjh-MacPro uml % git branch
+* feature1
+  master
+shijianhua@sjh-MacPro uml %
+```
+
+==注意：这里的主工程并没有创建feature1 分支，说明还要单独给子module创建一个分支。==
+
+**查看差异**
+
+```console
+git submodule foreach 'git diff'
+```
 
