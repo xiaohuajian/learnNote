@@ -704,7 +704,7 @@ eg: git submodule add https://github.com/chaconinc/DbConnector
 
 接着，我们还要把刚刚添加的东西push 到远程仓库。这时只需`git push` 即可。
 
-### 克隆含义子模块的项目
+### 克隆含子模块的项目
 
 如果直接运行 `git clone projetUrl` 你会发现有主项目的代码，默认也会包含该子模块目录，但其中还没有任何文件。想要把submodule 拉取下来，应该在执行：
 
